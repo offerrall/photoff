@@ -16,7 +16,7 @@ class CudaImage:
     def __init__(self, width: int, height: int, auto_init: bool = True):
         self.width = width
         self.height = height
-        self.buffer = None
+        self.buffer: CudaBuffer = None
         if auto_init:
             self.init_image()
     
