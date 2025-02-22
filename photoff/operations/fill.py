@@ -1,5 +1,5 @@
-from .._cffi_instance import _lib
-from ..types import CudaImage, RGBA
+from ..core import _lib
+from ..core.types import CudaImage, RGBA
 
 def fill_color(image: CudaImage, color: RGBA) -> None:
 

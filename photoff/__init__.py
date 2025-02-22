@@ -1,1 +1,1 @@
-from ._cffi_instance import *
+from .core import *

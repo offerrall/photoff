@@ -1,4 +1,4 @@
-from ._cffi_instance import _lib, ffi
+from .cuda_interface import _lib, ffi
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .types import CudaBuffer

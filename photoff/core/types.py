@@ -1,6 +1,6 @@
 from dataclasses import dataclass as _dataclass
 from typing import Any as CudaBuffer
-from ._core import create_buffer, free_buffer
+from .buffer import create_buffer, free_buffer
 
 
 @_dataclass
@@ -16,7 +16,7 @@ class CudaImage:
     def __init__(self, width: int, height: int, auto_init: bool = True):
         self.width = width
         self.height = height
-        self.buffer = None
+        self.buffer: CudaBuffer = None
         if auto_init:
             self.init_image()
     
@@ -25,6 +25,7 @@ class CudaImage:
     
     def free_image(self):
         free_buffer(self.buffer)
+        self.buffer = None
 
     def __del__(self):
         free_buffer(self.buffer)

@@ -1,7 +1,7 @@
 from PIL import Image
-from ._cffi_instance import ffi
-from ._core import copy_to_host, copy_to_device
-from .types import CudaImage
+from ..core import ffi
+from ..core.buffer import copy_to_host, copy_to_device
+from ..core.types import CudaImage
 import numpy as np
 
 

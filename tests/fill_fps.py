@@ -1,5 +1,5 @@
-from photoff.types import RGBA, CudaImage
-from photoff.fill import fill_color
+from photoff import RGBA, CudaImage
+from photoff.operations.fill import fill_color
 
 from time import perf_counter
 
