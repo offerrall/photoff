@@ -65,6 +65,14 @@ ffi.cdef("""
                         uint32_t dst_height,
                         uint32_t src_width,
                         uint32_t src_height);
+
+    void resize_bicubic(uchar4* dst,
+                        const uchar4* src,
+                        uint32_t dst_width,
+                        uint32_t dst_height,
+                        uint32_t src_width,
+                        uint32_t src_height);
+    
 """)
 
 _lib = ffi.dlopen("photoff.dll")

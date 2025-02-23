@@ -6,7 +6,7 @@ from functogui import App, imageFileReturn, intUi, fileUi, listUi
 def resize_ui(image: Annotated[str, fileUi] = "./visual_test/resize.jpg",
               new_width: Annotated[int, intUi(min_value=1, max_value=1920)] = 800,
               new_height: Annotated[int, intUi(min_value=1, max_value=1080)] = 600,
-              method: Annotated[str, listUi(values=["bilinear", "nearest"])] = "bilinear"
+              method: Annotated[str, listUi(values=["bilinear", "nearest", "bicubic"])] = "bicubic"
               ) -> Annotated[str, imageFileReturn]:
 
     path = "./visual_test/resized.png"

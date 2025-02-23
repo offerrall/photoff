@@ -12,7 +12,6 @@ def measure_resize_fps(
     method=ResizeMethod.BILINEAR,
     iterations=100
 ):
-
     source_image = CudaImage(src_width, src_height)
     fill_color(source_image, RGBA(255, 0, 0, 255))
     
@@ -58,10 +57,20 @@ def compare_resize_methods(
         iterations
     )
     
+    print("\nTesting BICUBIC resize:")
+    bicubic_fps, bicubic_time = measure_resize_fps(
+        src_width, src_height,
+        dst_width, dst_height,
+        ResizeMethod.BICUBIC,
+        iterations
+    )
+    
     print("\nComparison:")
     print(f"BILINEAR: {bilinear_fps:.2f} FPS ({bilinear_time:.2f}s)")
     print(f"NEAREST:  {nearest_fps:.2f} FPS ({nearest_time:.2f}s)")
-    print(f"Speed difference: {(nearest_fps/bilinear_fps - 1)*100:.1f}% (+ means NEAREST is faster)")
+    print(f"BICUBIC:  {bicubic_fps:.2f} FPS ({bicubic_time:.2f}s)")
+    print(f"Speed difference (NEAREST vs BILINEAR): {(nearest_fps/bilinear_fps - 1)*100:.1f}% (+ means NEAREST is faster)")
+    print(f"Speed difference (BICUBIC vs BILINEAR): {(bicubic_fps/bilinear_fps - 1)*100:.1f}% (+ means BICUBIC is faster)")
 
 if __name__ == "__main__":
     compare_resize_methods()
