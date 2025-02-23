@@ -75,6 +75,50 @@ __global__ void blendKernel(uchar4* dst,
     }
 }
 
+__global__ void cornerRadiusKernel(uchar4* buffer,
+                                   uint32_t width,
+                                   uint32_t height,
+                                   uint32_t radius) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    int idx = y * width + x;
+    
+    if (x < radius && y < radius) {
+        int dx = radius - 1 - x;
+        int dy = radius - 1 - y;
+        if (dx * dx + dy * dy > radius * radius) {
+            buffer[idx] = make_uchar4(0, 0, 0, 0);
+        }
+    }
+
+    else if (x >= width - radius && y < radius) {
+        int dx = x - (width - radius);
+        int dy = radius - 1 - y;
+        if (dx * dx + dy * dy > radius * radius) {
+            buffer[idx] = make_uchar4(0, 0, 0, 0);
+        }
+    }
+
+    else if (x < radius && y >= height - radius) {
+        int dx = radius - 1 - x;
+        int dy = y - (height - radius);
+        if (dx * dx + dy * dy > radius * radius) {
+            buffer[idx] = make_uchar4(0, 0, 0, 0);
+        }
+    }
+
+    else if (x >= width - radius && y >= height - radius) {
+        int dx = x - (width - radius);
+        int dy = y - (height - radius);
+        if (dx * dx + dy * dy > radius * radius) {
+            buffer[idx] = make_uchar4(0, 0, 0, 0);
+        }
+    }
+}
+
 
 extern "C" {
 
@@ -162,6 +206,21 @@ void fill_color(uchar4* buffer,
               (height + block.y - 1) / block.y);
               
     fillColorKernel<<<grid, block>>>(buffer, color, width, height);
+
+    cudaDeviceSynchronize();
+}
+
+void apply_corner_radius(uchar4* buffer,
+                         uint32_t width,
+                         uint32_t height,
+                         uint32_t size) {
+    if (!buffer) return;
+
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+                (height + block.y - 1) / block.y);
+                
+    cornerRadiusKernel<<<grid, block>>>(buffer, width, height, size);
 
     cudaDeviceSynchronize();
 }

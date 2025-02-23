@@ -36,6 +36,11 @@ ffi.cdef("""
                     unsigned char g, 
                     unsigned char b,
                     unsigned char a);
+
+    void apply_corner_radius(uchar4* buffer,
+                             uint32_t width,
+                             uint32_t height,
+                             uint32_t size);
 """)
 
-_lib = ffi.dlopen("cuda_composer.dll")
+_lib = ffi.dlopen("photoff.dll")

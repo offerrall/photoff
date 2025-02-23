@@ -34,7 +34,7 @@ __declspec(dllexport) void copy_to_device(uchar4* d_dst,
 
 // ---------------------------------------------------------------------------
 
-// Image Processing -----------------------------------------------------------
+// Blend -----------------------------------------------------------
 
 __declspec(dllexport) void blend_buffers(uchar4* dst,
                                          const uchar4* src,
@@ -57,6 +57,11 @@ __declspec(dllexport) void fill_color(uchar4* buffer,
 
 // ---------------------------------------------------------------------------
 
+// Filters -------------------------------------------------------------------
+__declspec(dllexport) void apply_corner_radius(uchar4* buffer,
+                                               uint32_t width,
+                                               uint32_t height,
+                                               uint32_t size);
 
 
 }
