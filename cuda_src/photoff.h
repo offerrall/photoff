@@ -70,7 +70,8 @@ __declspec(dllexport) void apply_stroke(uchar4* buffer,
                                         unsigned char stroke_r,
                                         unsigned char stroke_g,
                                         unsigned char stroke_b,
-                                        unsigned char stroke_a);
+                                        unsigned char stroke_a,
+                                        int mode);
 
 
 }
