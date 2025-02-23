@@ -316,16 +316,13 @@ void apply_stroke(uchar4* buffer,
         dim3 grid((width + block.x - 1) / block.x,
                   (height + block.y - 1) / block.y);
         
-        // Crear un buffer temporal para evitar race conditions.
         uchar4* temp_buffer = nullptr;
         cudaMalloc(&temp_buffer, width * height * sizeof(uchar4));
         if (!temp_buffer) return;
         
-        // Copiar el contenido original a temp_buffer.
         cudaMemcpy(temp_buffer, buffer, width * height * sizeof(uchar4),
                    cudaMemcpyDeviceToDevice);
         
-        // Según el modo, invocar el kernel correspondiente.
         if (mode == 0) {
             strokeKernel<<<grid, block>>>(temp_buffer, buffer, width, height,
                                           stroke_width, stroke_color);
