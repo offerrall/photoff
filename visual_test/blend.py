@@ -13,7 +13,6 @@ def blend_ui(color1: tuple[int, int, int, int] = (255, 0, 0, 255),
              color2_width: Annotated[int, intUi(min_value=1, max_value=1920)] = 300,
              x: Annotated[int, intUi(min_value=0, max_value=1920)] = 0,
              y: Annotated[int, intUi(min_value=0, max_value=1080)] = 0
-            
              ) -> Annotated[str, imageFileReturn]:
 
     path = "./visual_test/blend.png"
