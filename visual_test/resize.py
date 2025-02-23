@@ -12,7 +12,7 @@ def resize_ui(image: Annotated[str, fileUi] = "./visual_test/resize.jpg",
     path = "./visual_test/resized.png"
     
     source_image = load_image(image)
-    resize_method = ResizeMethod.BILINEAR if method == "bilinear" else ResizeMethod.NEAREST
+    resize_method = ResizeMethod[method.upper()]
     resized = resize(source_image, new_width, new_height, method=resize_method)
     
     save_image(resized, path)
