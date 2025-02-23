@@ -1,6 +1,6 @@
-from photoff import RGBA, CudaImage
 from photoff.operations.fill import fill_color
 from photoff.io import save_image
+from photoff import RGBA, CudaImage
 
 from typing import Annotated
 from functogui import App, imageFileReturn
