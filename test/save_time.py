@@ -1,6 +1,6 @@
-from photoff.api import save_image
-from photoff.types import CudaImage, RGBA
-from photoff.fill import fill_color
+from photoff.io import save_image
+from photoff import CudaImage, RGBA
+from photoff.operations.fill import fill_color
 
 from time import perf_counter
 
