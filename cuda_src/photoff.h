@@ -63,5 +63,14 @@ __declspec(dllexport) void apply_corner_radius(uchar4* buffer,
                                                uint32_t height,
                                                uint32_t size);
 
+__declspec(dllexport) void apply_stroke(uchar4* buffer,
+                                        uint32_t width,
+                                        uint32_t height,
+                                        int stroke_width,
+                                        unsigned char stroke_r,
+                                        unsigned char stroke_g,
+                                        unsigned char stroke_b,
+                                        unsigned char stroke_a);
+
 
 }

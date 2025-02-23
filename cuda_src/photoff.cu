@@ -119,6 +119,41 @@ __global__ void cornerRadiusKernel(uchar4* buffer,
     }
 }
 
+__global__ void strokeKernel(uchar4* buffer,
+                             uint32_t width,
+                             uint32_t height,
+                             int stroke_width,
+                             uchar4 stroke_color) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    int idx = y * width + x;
+    
+    // Solo aplicamos trazo en píxeles transparentes (suponiendo un trazo externo)
+    if (buffer[idx].w != 0) return;
+    
+    bool isEdge = false;
+    // Revisar un vecindario de tamaño (2*stroke_width+1)x(2*stroke_width+1)
+    for (int j = -stroke_width; j <= stroke_width && !isEdge; j++) {
+        for (int i = -stroke_width; i <= stroke_width && !isEdge; i++) {
+            int nx = x + i;
+            int ny = y + j;
+            if (nx < 0 || nx >= width || ny < 0 || ny >= height)
+                continue;
+            int nidx = ny * width + nx;
+            // Si algún vecino es opaco, se considera borde
+            if (buffer[nidx].w != 0) {
+                isEdge = true;
+            }
+        }
+    }
+    
+    if (isEdge) {
+        buffer[idx] = stroke_color;
+    }
+}
 
 extern "C" {
 
@@ -222,6 +257,26 @@ void apply_corner_radius(uchar4* buffer,
                 
     cornerRadiusKernel<<<grid, block>>>(buffer, width, height, size);
 
+    cudaDeviceSynchronize();
+}
+
+__declspec(dllexport) void apply_stroke(uchar4* buffer,
+                                          uint32_t width,
+                                          uint32_t height,
+                                          int stroke_width,
+                                          unsigned char stroke_r,
+                                          unsigned char stroke_g,
+                                          unsigned char stroke_b,
+                                          unsigned char stroke_a) {
+    if (!buffer) return;
+    
+    uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
+    
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+              (height + block.y - 1) / block.y);
+              
+    strokeKernel<<<grid, block>>>(buffer, width, height, stroke_width, stroke_color);
     cudaDeviceSynchronize();
 }
 
