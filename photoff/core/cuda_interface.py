@@ -7,7 +7,7 @@ ffi.cdef("""
     
     uchar4* create_buffer(uint32_t width,
                           uint32_t height);
-         
+
     void free_buffer(uchar4* buffer);
          
     void copy_to_device(uchar4* d_dst,
@@ -51,7 +51,20 @@ ffi.cdef("""
                       unsigned char stroke_b,
                       unsigned char stroke_a,
                       int mode);
-         
+
+    void resize_bilinear(uchar4* dst,
+                        const uchar4* src,
+                        uint32_t dst_width,
+                        uint32_t dst_height,
+                        uint32_t src_width,
+                        uint32_t src_height);
+
+    void resize_nearest(uchar4* dst,
+                        const uchar4* src,
+                        uint32_t dst_width,
+                        uint32_t dst_height,
+                        uint32_t src_width,
+                        uint32_t src_height);
 """)
 
 _lib = ffi.dlopen("photoff.dll")
