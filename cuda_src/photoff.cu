@@ -2,6 +2,88 @@
 #include <stdio.h>
 
 
+
+__global__ void resizeBilinearKernel(uchar4* dst,
+                                     const uchar4* src,
+                                     uint32_t dst_width,
+                                     uint32_t dst_height,
+                                     uint32_t src_width,
+                                     uint32_t src_height) {
+
+    int dst_x = blockIdx.x * blockDim.x + threadIdx.x;
+    int dst_y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (dst_x >= dst_width || dst_y >= dst_height) return;
+
+    float scale_x = (float)(src_width - 1) / dst_width;
+    float scale_y = (float)(src_height - 1) / dst_height;
+    
+    float src_x = dst_x * scale_x;
+    float src_y = dst_y * scale_y;
+    
+    int x1 = (int)src_x;
+    int y1 = (int)src_y;
+    int x2 = min(x1 + 1, (int)src_width - 1);
+    int y2 = min(y1 + 1, (int)src_height - 1);
+    
+    float wx2 = src_x - x1;
+    float wy2 = src_y - y1;
+    float wx1 = 1.0f - wx2;
+    float wy1 = 1.0f - wy2;
+    
+    uchar4 p11 = src[y1 * src_width + x1];
+    uchar4 p21 = src[y1 * src_width + x2];
+    uchar4 p12 = src[y2 * src_width + x1];
+    uchar4 p22 = src[y2 * src_width + x2];
+    
+    int dst_idx = dst_y * dst_width + dst_x;
+    dst[dst_idx].x = (unsigned char)(
+        p11.x * wx1 * wy1 +
+        p21.x * wx2 * wy1 +
+        p12.x * wx1 * wy2 +
+        p22.x * wx2 * wy2);
+    
+    dst[dst_idx].y = (unsigned char)(
+        p11.y * wx1 * wy1 +
+        p21.y * wx2 * wy1 +
+        p12.y * wx1 * wy2 +
+        p22.y * wx2 * wy2);
+    
+    dst[dst_idx].z = (unsigned char)(
+        p11.z * wx1 * wy1 +
+        p21.z * wx2 * wy1 +
+        p12.z * wx1 * wy2 +
+        p22.z * wx2 * wy2);
+    
+    dst[dst_idx].w = (unsigned char)(
+        p11.w * wx1 * wy1 +
+        p21.w * wx2 * wy1 +
+        p12.w * wx1 * wy2 +
+        p22.w * wx2 * wy2);
+}
+
+__global__ void resizeNearestKernel(uchar4* dst,
+                                    const uchar4* src,
+                                    uint32_t dst_width,
+                                    uint32_t dst_height,
+                                    uint32_t src_width,
+                                    uint32_t src_height) {
+
+    int dst_x = blockIdx.x * blockDim.x + threadIdx.x;
+    int dst_y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (dst_x >= dst_width || dst_y >= dst_height) return;
+
+    float scale_x = (float)src_width / dst_width;
+    float scale_y = (float)src_height / dst_height;
+
+    int src_x = (int)(dst_x * scale_x);
+    int src_y = (int)(dst_y * scale_y);
+    
+    dst[dst_y * dst_width + dst_x] = src[src_y * src_width + src_x];
+}
+
+
 __global__ void fillColorKernel(uchar4* buffer,
                                 uchar4 color, 
                                 uint32_t width,
@@ -261,6 +343,44 @@ void blend_buffers(uchar4* dst,
     blendKernel<<<grid, block>>>(dst, src, dst_width, dst_height,
                                 src_width, src_height, x, y);
 
+    cudaDeviceSynchronize();
+}
+
+void resize_bilinear(uchar4* dst,
+                     const uchar4* src,
+                     uint32_t dst_width,
+                     uint32_t dst_height,
+                     uint32_t src_width,
+                     uint32_t src_height) {
+    if (!dst || !src) return;
+
+    dim3 block(16, 16);
+    dim3 grid((dst_width + block.x - 1) / block.x,
+              (dst_height + block.y - 1) / block.y);
+              
+    resizeBilinearKernel<<<grid, block>>>(dst, src,
+                                         dst_width, dst_height,
+                                         src_width, src_height);
+    
+    cudaDeviceSynchronize();
+}
+
+void resize_nearest(uchar4* dst,
+                    const uchar4* src,
+                    uint32_t dst_width,
+                    uint32_t dst_height,
+                    uint32_t src_width,
+                    uint32_t src_height) {
+    if (!dst || !src) return;
+
+    dim3 block(16, 16);
+    dim3 grid((dst_width + block.x - 1) / block.x,
+                (dst_height + block.y - 1) / block.y);
+                
+    resizeNearestKernel<<<grid, block>>>(dst, src,
+                                        dst_width, dst_height,
+                                        src_width, src_height);
+    
     cudaDeviceSynchronize();
 }
 

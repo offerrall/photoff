@@ -45,6 +45,8 @@ __declspec(dllexport) void blend_buffers(uchar4* dst,
                                          int32_t x,
                                          int32_t y);
 
+// ---------------------------------------------------------------------------
+
 // Fill effects ---------------------------------------------------------------
 
 __declspec(dllexport) void fill_color(uchar4* buffer,
@@ -73,5 +75,24 @@ __declspec(dllexport) void apply_stroke(uchar4* buffer,
                                         unsigned char stroke_a,
                                         int mode);
 
+// ---------------------------------------------------------------------------
+
+// Resize --------------------------------------------------------------------
+
+__declspec(dllexport) void resize_bilinear(uchar4* dst,
+                                           const uchar4* src,
+                                           uint32_t dst_width,
+                                           uint32_t dst_height,
+                                           uint32_t src_width,
+                                           uint32_t src_height);
+
+__declspec(dllexport) void resize_bilinear(uchar4* dst,
+                                           const uchar4* src,
+                                           uint32_t dst_width,
+                                           uint32_t dst_height,
+                                           uint32_t src_width,
+                                           uint32_t src_height);
+
+// ---------------------------------------------------------------------------
 
 }
