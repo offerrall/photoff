@@ -23,9 +23,12 @@ class CudaImage:
     def init_image(self):
         self.buffer = create_buffer(self.width, self.height)
     
-    def free_image(self):
+    def free(self):
+        if self.buffer is None:
+            return
         free_buffer(self.buffer)
         self.buffer = None
 
     def __del__(self):
-        free_buffer(self.buffer)
+        if self.buffer is not None:
+            free_buffer(self.buffer)
