@@ -119,7 +119,8 @@ __global__ void cornerRadiusKernel(uchar4* buffer,
     }
 }
 
-__global__ void strokeKernel(uchar4* buffer,
+__global__ void strokeKernel(const uchar4* src,
+                             uchar4* dst,
                              uint32_t width,
                              uint32_t height,
                              int stroke_width,
@@ -127,33 +128,44 @@ __global__ void strokeKernel(uchar4* buffer,
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
+    // Verificamos límites
     if (x >= width || y >= height) return;
     
     int idx = y * width + x;
+    uchar4 pixel = src[idx];
+
+    // Si el pixel original no es transparente, lo copiamos tal cual
+    if (pixel.w != 0) {
+        dst[idx] = pixel;
+        return;
+    }
     
-    // Solo aplicamos trazo en píxeles transparentes (suponiendo un trazo externo)
-    if (buffer[idx].w != 0) return;
-    
-    bool isEdge = false;
-    // Revisar un vecindario de tamaño (2*stroke_width+1)x(2*stroke_width+1)
-    for (int j = -stroke_width; j <= stroke_width && !isEdge; j++) {
-        for (int i = -stroke_width; i <= stroke_width && !isEdge; i++) {
-            int nx = x + i;
-            int ny = y + j;
-            if (nx < 0 || nx >= width || ny < 0 || ny >= height)
-                continue;
-            int nidx = ny * width + nx;
-            // Si algún vecino es opaco, se considera borde
-            if (buffer[nidx].w != 0) {
-                isEdge = true;
+    // Si es transparente, buscamos en el área circular
+    int r2 = stroke_width * stroke_width;
+    for (int dy = -stroke_width; dy <= stroke_width; dy++) {
+        for (int dx = -stroke_width; dx <= stroke_width; dx++) {
+            // Sólo consideramos el círculo
+            if (dx*dx + dy*dy > r2) continue;
+            
+            int nx = x + dx;
+            int ny = y + dy;
+            
+            // Comprobamos límites del buffer
+            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+            
+            // Si en la imagen original hay un píxel opaco en el vecindario
+            if (src[ny * width + nx].w != 0) {
+                dst[idx] = stroke_color;  // Pintamos el stroke
+                return;
             }
         }
     }
     
-    if (isEdge) {
-        buffer[idx] = stroke_color;
-    }
+    // Si no encontramos un vecino opaco, se queda transparente
+    dst[idx] = pixel;
 }
+
+
 
 extern "C" {
 
@@ -260,23 +272,42 @@ void apply_corner_radius(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-__declspec(dllexport) void apply_stroke(uchar4* buffer,
-                                          uint32_t width,
-                                          uint32_t height,
-                                          int stroke_width,
-                                          unsigned char stroke_r,
-                                          unsigned char stroke_g,
-                                          unsigned char stroke_b,
-                                          unsigned char stroke_a) {
+void apply_stroke(uchar4* buffer,
+                  uint32_t width,
+                  uint32_t height,
+                  int stroke_width,
+                  unsigned char stroke_r,
+                  unsigned char stroke_g,
+                  unsigned char stroke_b,
+                  unsigned char stroke_a)
+{
     if (!buffer) return;
     
-    uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
+    // 1) Crear un segundo buffer temporal
+    uchar4* temp_buffer = nullptr;
+    cudaMalloc(&temp_buffer, width * height * sizeof(uchar4));
+    if (!temp_buffer) return;
     
+    // 2) Copiamos el contenido original de 'buffer' a 'temp_buffer'
+    cudaMemcpy(temp_buffer, buffer, width * height * sizeof(uchar4),
+               cudaMemcpyDeviceToDevice);
+    
+    // 3) Configurar kernel
+    uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
     dim3 block(16, 16);
     dim3 grid((width + block.x - 1) / block.x,
               (height + block.y - 1) / block.y);
-              
-    strokeKernel<<<grid, block>>>(buffer, width, height, stroke_width, stroke_color);
+    
+    // 4) Invocar kernel: 'temp_buffer' como src, 'buffer' como dst
+    strokeKernel<<<grid, block>>>(temp_buffer, 
+                                  buffer, 
+                                  width, 
+                                  height, 
+                                  stroke_width, 
+                                  stroke_color);
+    
+    // 5) Sincronizar y liberar temp_buffer
+    cudaFree(temp_buffer);
     cudaDeviceSynchronize();
 }
 
