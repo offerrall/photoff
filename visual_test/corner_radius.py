@@ -13,12 +13,8 @@ def corner_border_ui(color: tuple[int, int, int, int] = (255, 0, 0, 255),
     path = "./visual_test/corner_border.png"
     image = CudaImage(1920, 1080)
 
-    # Primero llenamos la imagen con el color base
     fill_color(image, RGBA(*color))
-    
-    # Aplicamos el efecto de border
     apply_corner_radius(image, border_size)
-    
     save_image(image, path)
     image.free()
 
