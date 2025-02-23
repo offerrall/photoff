@@ -93,6 +93,13 @@ __declspec(dllexport) void resize_nearest(uchar4* dst,
                                           uint32_t src_width,
                                           uint32_t src_height);
 
+__declspec(dllexport) void resize_bicubic(uchar4* dst,
+                                          const uchar4* src,
+                                          uint32_t dst_width,
+                                          uint32_t dst_height,
+                                          uint32_t src_width,
+                                          uint32_t src_height);
+
 // ---------------------------------------------------------------------------
 
 }

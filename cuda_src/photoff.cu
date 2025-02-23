@@ -1,7 +1,76 @@
 #include "photoff.h"
 #include <stdio.h>
 
+__device__ float bicubicWeight(float x, float a = -0.5f) {
+    x = fabsf(x);
+    if (x <= 1.0f) {
+        return ((a + 2.0f) * x * x * x) - ((a + 3.0f) * x * x) + 1.0f;
+    } else if (x < 2.0f) {
+        return (a * x * x * x) - (5.0f * a * x * x) + (8.0f * a * x) - (4.0f * a);
+    }
+    return 0.0f;
+}
 
+__global__ void resizeBicubicKernel(uchar4* dst,
+                                   const uchar4* src,
+                                   uint32_t dst_width,
+                                   uint32_t dst_height,
+                                   uint32_t src_width,
+                                   uint32_t src_height) {
+    int dst_x = blockIdx.x * blockDim.x + threadIdx.x;
+    int dst_y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (dst_x >= dst_width || dst_y >= dst_height) return;
+
+    float scale_x = (float)(src_width) / dst_width;
+    float scale_y = (float)(src_height) / dst_height;
+    
+    float src_x = dst_x * scale_x;
+    float src_y = dst_y * scale_y;
+
+    int x0 = floorf(src_x - 1.0f);
+    int y0 = floorf(src_y - 1.0f);
+    
+    float4 result = make_float4(0.0f, 0.0f, 0.0f, 0.0f);
+    float totalWeight = 0.0f;
+
+    #pragma unroll
+    for (int dy = 0; dy < 4; dy++) {
+        int sy = y0 + dy;
+        float wy = bicubicWeight(src_y - sy);
+        
+        #pragma unroll
+        for (int dx = 0; dx < 4; dx++) {
+            int sx = x0 + dx;
+            
+            if (sx >= 0 && sx < src_width && sy >= 0 && sy < src_height) {
+                float wx = bicubicWeight(src_x - sx);
+                float weight = wx * wy;
+                
+                uchar4 pixel = src[sy * src_width + sx];
+                result.x += weight * pixel.x;
+                result.y += weight * pixel.y;
+                result.z += weight * pixel.z;
+                result.w += weight * pixel.w;
+                totalWeight += weight;
+            }
+        }
+    }
+
+    if (totalWeight > 0.0f) {
+        result.x = fmaxf(0.0f, fminf(255.0f, result.x / totalWeight));
+        result.y = fmaxf(0.0f, fminf(255.0f, result.y / totalWeight));
+        result.z = fmaxf(0.0f, fminf(255.0f, result.z / totalWeight));
+        result.w = fmaxf(0.0f, fminf(255.0f, result.w / totalWeight));
+    }
+
+    dst[dst_y * dst_width + dst_x] = make_uchar4(
+        __float2int_rn(result.x),
+        __float2int_rn(result.y),
+        __float2int_rn(result.z),
+        __float2int_rn(result.w)
+    );
+}
 
 __global__ void resizeBilinearKernel(uchar4* dst,
                                      const uchar4* src,
@@ -161,6 +230,7 @@ __global__ void cornerRadiusKernel(uchar4* buffer,
                                    uint32_t width,
                                    uint32_t height,
                                    uint32_t radius) {
+
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -207,6 +277,7 @@ __global__ void strokeKernel(const uchar4* src,
                              uint32_t height,
                              int stroke_width,
                              uchar4 stroke_color) {
+
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -239,11 +310,12 @@ __global__ void strokeKernel(const uchar4* src,
 }
 
 __global__ void innerStrokeKernel(const uchar4* src,
-                                    uchar4* dst,
-                                    uint32_t width,
-                                    uint32_t height,
-                                    int stroke_width,
-                                    uchar4 stroke_color) {
+                                  uchar4* dst,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  int stroke_width,
+                                  uchar4 stroke_color) {
+
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -381,6 +453,25 @@ void resize_nearest(uchar4* dst,
                                         dst_width, dst_height,
                                         src_width, src_height);
     
+    cudaDeviceSynchronize();
+}
+
+void resize_bicubic(uchar4* dst,
+                    const uchar4* src,
+                    uint32_t dst_width,
+                    uint32_t dst_height,
+                    uint32_t src_width,
+                    uint32_t src_height) {
+    if (!dst || !src) return;
+
+    dim3 block(16, 16);
+    dim3 grid((dst_width + block.x - 1) / block.x,
+                (dst_height + block.y - 1) / block.y);
+            
+    resizeBicubicKernel<<<grid, block>>>(dst, src,
+                                        dst_width, dst_height,
+                                        src_width, src_height);
+
     cudaDeviceSynchronize();
 }
 
