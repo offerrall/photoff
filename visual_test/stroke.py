@@ -11,7 +11,7 @@ def corner_border_ui(image: Annotated[str, fileUi] = "./visual_test/logo.png",
                      stroke_color: tuple[int, int, int, int] = (0, 255, 0, 255)
                      ) -> Annotated[str, imageFileReturn]:
     
-    path = "./visual_test/corner_border.png"
+    path = "./visual_test/stroke_test.png"
     image = load_image(image)
 
     apply_stroke(image, stroke_width, RGBA(*stroke_color))
