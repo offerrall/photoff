@@ -12,7 +12,7 @@ def corner_border_ui(image: Annotated[str, fileUi] = "./visual_test/logo.png",
                     inner: bool = False
                     ) -> Annotated[str, imageFileReturn]:
     
-    path = "./stroke_test.png"
+    path = "./visual_test/stroke_test.png"
     src_image = load_image(image)
     image_size = (src_image.width, src_image.height)
     

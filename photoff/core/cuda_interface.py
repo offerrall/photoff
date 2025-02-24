@@ -78,7 +78,19 @@ ffi.cdef("""
                        uint32_t width,
                        uint32_t height,
                        float opacity);
-    
+
+    void apply_shadow(const uchar4* src_buffer,
+                      uchar4* dst_buffer,
+                      uint32_t width,
+                      uint32_t height,
+                      float radius,
+                      float intensity,
+                      unsigned char shadow_r,
+                      unsigned char shadow_g,
+                      unsigned char shadow_b,
+                      unsigned char shadow_a,
+                      int mode);
+
 """)
 
 _lib = ffi.dlopen("photoff.dll")

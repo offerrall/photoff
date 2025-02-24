@@ -1,6 +1,80 @@
 #include "photoff.h"
 #include <stdio.h>
 
+
+__device__ float calculateShadowWeight(int x, int y,
+                                     const uchar4* buffer,
+                                     uint32_t width,
+                                     uint32_t height,
+                                     float radius,
+                                     bool isInner) {
+    float minDistance = radius;
+    int r2 = radius * radius;
+    
+    for (int dy = -radius; dy <= radius; dy++) {
+        for (int dx = -radius; dx <= radius; dx++) {
+            if (dx*dx + dy*dy > r2) continue;
+            
+            int nx = x + dx;
+            int ny = y + dy;
+            
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                bool hasAlpha = buffer[ny * width + nx].w > 0;
+                if (hasAlpha != isInner) {
+                    float distance = sqrtf(dx*dx + dy*dy);
+                    minDistance = min(minDistance, distance);
+                }
+            }
+        }
+    }
+    
+    float weight = 1.0f - (minDistance / radius);
+    return max(0.0f, min(1.0f, weight));
+}
+
+__global__ void shadowKernel(const uchar4* src,
+                           uchar4* dst,
+                           uint32_t width,
+                           uint32_t height,
+                           float radius,
+                           float intensity,
+                           uchar4 shadow_color,
+                           bool isInner) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    int idx = y * width + x;
+    uchar4 srcPixel = src[idx];
+    
+    if ((isInner && srcPixel.w == 0) || (!isInner && srcPixel.w > 0)) {
+        dst[idx] = srcPixel;
+        return;
+    }
+    
+    float shadowWeight = calculateShadowWeight(x, y, src, width, height, radius, isInner);
+    shadowWeight *= intensity;
+    
+    if (isInner) {
+        float invWeight = 1.0f - shadowWeight;
+        dst[idx].x = (unsigned char)(srcPixel.x * invWeight + shadow_color.x * shadowWeight);
+        dst[idx].y = (unsigned char)(srcPixel.y * invWeight + shadow_color.y * shadowWeight);
+        dst[idx].z = (unsigned char)(srcPixel.z * invWeight + shadow_color.z * shadowWeight);
+        dst[idx].w = srcPixel.w;
+    } else {
+        if (shadowWeight > 0.0f) {
+            float finalAlpha = shadow_color.w / 255.0f * shadowWeight;
+            dst[idx].x = shadow_color.x;
+            dst[idx].y = shadow_color.y;
+            dst[idx].z = shadow_color.z;
+            dst[idx].w = (unsigned char)(finalAlpha * 255.0f);
+        } else {
+            dst[idx] = make_uchar4(0, 0, 0, 0);
+        }
+    }
+}
+
 __device__ float bicubicWeight(float x, float a = -0.5f) {
     x = fabsf(x);
     if (x <= 1.0f) {
@@ -570,6 +644,34 @@ void apply_opacity(uchar4* buffer,
             (height + block.y - 1) / block.y);
             
     applyOpacityKernel<<<grid, block>>>(buffer, width, height, opacity);
+    cudaDeviceSynchronize();
+}
+
+void apply_shadow(const uchar4* src_buffer,
+                  uchar4* dst_buffer,
+                  uint32_t width,
+                  uint32_t height,
+                  float radius,
+                  float intensity,
+                  unsigned char shadow_r,
+                  unsigned char shadow_g,
+                  unsigned char shadow_b,
+                  unsigned char shadow_a,
+                  int mode) {
+    if (!src_buffer || !dst_buffer) return;
+    
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+                (height + block.y - 1) / block.y);
+    
+    uchar4 shadow_color = make_uchar4(shadow_r, shadow_g, shadow_b, shadow_a);
+    bool isInner = mode == 1;
+    
+    shadowKernel<<<grid, block>>>(src_buffer, dst_buffer,
+                                width, height,
+                                radius, intensity,
+                                shadow_color, isInner);
+    
     cudaDeviceSynchronize();
 }
 

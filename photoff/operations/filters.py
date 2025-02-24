@@ -15,5 +15,19 @@ def apply_stroke(src_image: CudaImage,
                       stroke_width, stroke_color.r, stroke_color.g,
                       stroke_color.b, stroke_color.a, int(inner))
 
+def apply_shadow(src_image: CudaImage,
+                 dst_image: CudaImage,
+                 radius: float,
+                 intensity: float,
+                 shadow_color: RGBA,
+                 inner: bool = False) -> None:
+    
+    _lib.apply_shadow(src_image.buffer, dst_image.buffer,
+                    src_image.width, src_image.height,
+                    radius, intensity, shadow_color.r,
+                    shadow_color.g, shadow_color.b, shadow_color.a, int(inner))
+
+
 def apply_opacity(image: CudaImage, opacity: float) -> None:
     _lib.apply_opacity(image.buffer, image.width, image.height, opacity)
+
