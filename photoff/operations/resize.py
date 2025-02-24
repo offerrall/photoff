@@ -1,7 +1,6 @@
 from enum import Enum
 from ..core import _lib
 from ..core.types import CudaImage
-from typing import Optional
 
 class ResizeMethod(Enum):
     BILINEAR = "bilinear"
@@ -12,7 +11,7 @@ def resize(image: CudaImage,
            width: int, 
            height: int, 
            method: ResizeMethod = ResizeMethod.BICUBIC,
-           dst_image: Optional[CudaImage] = None
+           dst_image: CudaImage = None
            ) -> CudaImage:
     
     if dst_image is None:
