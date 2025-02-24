@@ -29,5 +29,6 @@ def apply_shadow(src_image: CudaImage,
 
 
 def apply_opacity(image: CudaImage, opacity: float) -> None:
+    
     _lib.apply_opacity(image.buffer, image.width, image.height, opacity)
 
