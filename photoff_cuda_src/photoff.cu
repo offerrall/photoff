@@ -1,6 +1,28 @@
 #include "photoff.h"
 #include <stdio.h>
 
+__global__ void cropKernel(const uchar4* src,
+                           uchar4* dst,
+                           uint32_t src_width,
+                           uint32_t src_height,
+                           uint32_t dst_width,
+                           uint32_t dst_height,
+                           int crop_x,
+                           int crop_y) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x >= dst_width || y >= dst_height) return;
+
+    int src_x = crop_x + x;
+    int src_y = crop_y + y;
+
+    if (src_x < src_width && src_y < src_height) {
+        dst[y * dst_width + x] = src[src_y * src_width + src_x];
+    } else {
+        dst[y * dst_width + x] = make_uchar4(0, 0, 0, 0);
+    }
+}
 
 __device__ float calculateShadowWeight(int x, int y,
                                      const uchar4* buffer,
@@ -739,6 +761,27 @@ void apply_flip(uchar4* buffer,
     flipKernel<<<grid, block>>>(buffer, width, height,
                                flip_horizontal, flip_vertical);
     
+    cudaDeviceSynchronize();
+}
+
+void crop_image(const uchar4* src_buffer,
+                uchar4* dst_buffer,
+                uint32_t src_width,
+                uint32_t src_height,
+                uint32_t dst_width,
+                uint32_t dst_height,
+                int crop_x,
+                int crop_y) {
+    if (!src_buffer || !dst_buffer) return;
+
+    dim3 block(16, 16);
+    dim3 grid((dst_width + block.x - 1) / block.x,
+              (dst_height + block.y - 1) / block.y);
+
+    cropKernel<<<grid, block>>>(src_buffer, dst_buffer,
+                                src_width, src_height,
+                                dst_width, dst_height,
+                                crop_x, crop_y);
     cudaDeviceSynchronize();
 }
 

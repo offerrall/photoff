@@ -9,7 +9,7 @@ def compile_cuda_dll():
     if os.path.exists(f"./{lib_name}.dll"):
         os.remove(f"./{lib_name}.dll")
 
-    source_file = f"./cuda_src/{lib_name}.cu"
+    source_file = f"./photoff_cuda_src/{lib_name}.cu"
     output_dll = f"./{lib_name}.dll"
     
     command = ["nvcc",
