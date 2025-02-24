@@ -1,6 +1,6 @@
 from dataclasses import dataclass as _dataclass
 from typing import Any as CudaBuffer
-from .buffer import create_buffer, free_buffer
+from .buffer import create_buffer, free_buffer, copy_buffer
 
 
 @_dataclass
@@ -31,6 +31,12 @@ class CudaImage:
             return
         free_buffer(self.buffer)
         self.buffer = None
+    
+    def copy(self):
+        copy_buffer(self.buffer, self.width, self.height)
+        copy = CudaImage(self.width, self.height, auto_init=False)
+        copy.buffer = self.buffer
+        return copy
 
     def __del__(self):
         if self.buffer is not None:

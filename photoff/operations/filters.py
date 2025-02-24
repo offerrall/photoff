@@ -5,10 +5,13 @@ def apply_corner_radius(image: CudaImage, size: int) -> None:
     _lib.apply_corner_radius(image.buffer, image.width, image.height, size)
 
 def apply_stroke(src_image: CudaImage,
-                 dst_image: CudaImage, 
                  stroke_width: int,
                  stroke_color: RGBA,
+                 dst_image: CudaImage = None,
                  inner: bool = False) -> None:
+    
+    if dst_image is None:
+        dst_image = src_image.copy()
 
     _lib.apply_stroke(src_image.buffer, dst_image.buffer,
                       src_image.width, src_image.height,
@@ -16,12 +19,15 @@ def apply_stroke(src_image: CudaImage,
                       stroke_color.b, stroke_color.a, int(inner))
 
 def apply_shadow(src_image: CudaImage,
-                 dst_image: CudaImage,
                  radius: float,
                  intensity: float,
                  shadow_color: RGBA,
+                 dst_image: CudaImage = None,
                  inner: bool = False) -> None:
     
+    if dst_image is None:
+        dst_image = src_image.copy()
+
     _lib.apply_shadow(src_image.buffer, dst_image.buffer,
                     src_image.width, src_image.height,
                     radius, intensity, shadow_color.r,

@@ -10,6 +10,13 @@ def create_buffer(width: int, height: int) -> 'CudaBuffer':
         raise MemoryError("Failed to allocate buffer")
     return _lib.create_buffer(width, height)
 
+def copy_buffer(src_buffer: 'CudaBuffer', width: int, height: int) -> 'CudaBuffer':
+    buffer = _lib.copy_buffer(src_buffer, width, height)
+
+    if buffer == ffi.NULL:
+        raise MemoryError("Failed to allocate buffer")
+    return buffer
+
 def free_buffer(buffer: 'CudaBuffer') -> None:
     _lib.free_buffer(buffer)
 

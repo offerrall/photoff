@@ -8,6 +8,10 @@ extern "C" {
 __declspec(dllexport) uchar4* create_buffer(uint32_t width,
                                             uint32_t height);
 
+__declspec(dllexport) uchar4* copy_buffer(const uchar4* src_buffer,
+                                          uint32_t width,
+                                          uint32_t height);
+
 __declspec(dllexport) void free_buffer(uchar4* buffer);
 
 __declspec(dllexport) void fill_color(uchar4* buffer,
