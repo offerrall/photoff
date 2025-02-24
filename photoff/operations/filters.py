@@ -33,3 +33,12 @@ def apply_opacity(image: CudaImage, opacity: float) -> None:
     
     _lib.apply_opacity(image.buffer, image.width, image.height, opacity)
 
+def apply_flip(image: CudaImage,
+               flip_horizontal: bool = False,
+               flip_vertical: bool = False) -> None:
+
+    _lib.apply_flip(image.buffer,
+                    image.width,
+                    image.height,
+                    flip_horizontal,
+                    flip_vertical)

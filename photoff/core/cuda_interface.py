@@ -95,6 +95,12 @@ ffi.cdef("""
                       unsigned char shadow_a,
                       int mode);
 
+    void apply_flip(uchar4* buffer,
+                    uint32_t width,
+                    uint32_t height,
+                    bool flip_horizontal,
+                    bool flip_vertical);
+         
 """)
 
 _lib = ffi.dlopen("photoff.dll")
