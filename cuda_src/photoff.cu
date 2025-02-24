@@ -441,22 +441,31 @@ __global__ void applyOpacityKernel(uchar4* buffer,
     buffer[idx].w = static_cast<unsigned char>(newAlpha * 255.0f);
 }
 
-__global__ void flipKernel(const uchar4* src,
-                          uchar4* dst,
-                          uint32_t width,
-                          uint32_t height,
-                          bool flipHorizontal,
-                          bool flipVertical) {
+__global__ void flipKernel(uchar4* buffer,
+                           uint32_t width,
+                           uint32_t height,
+                           bool flipHorizontal,
+                           bool flipVertical) {
     
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
     if (x >= width || y >= height) return;
     
+    if ((flipHorizontal && x >= width/2) || 
+        (flipVertical && y >= height/2)) return;
+    
     int src_x = flipHorizontal ? (width - 1 - x) : x;
     int src_y = flipVertical ? (height - 1 - y) : y;
     
-    dst[y * width + x] = src[src_y * width + src_x];
+    if (src_x == x && src_y == y) return;
+    
+    int idx1 = y * width + x;
+    int idx2 = src_y * width + src_x;
+    
+    uchar4 temp = buffer[idx1];
+    buffer[idx1] = buffer[idx2];
+    buffer[idx2] = temp;
 }
 
 
@@ -716,20 +725,18 @@ void apply_shadow(const uchar4* src_buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_flip(const uchar4* src_buffer,
-                uchar4* dst_buffer,
+void apply_flip(uchar4* buffer,
                 uint32_t width,
                 uint32_t height,
                 bool flip_horizontal,
                 bool flip_vertical) {
-    if (!src_buffer || !dst_buffer) return;
+    if (!buffer) return;
     
     dim3 block(16, 16);
     dim3 grid((width + block.x - 1) / block.x,
               (height + block.y - 1) / block.y);
               
-    flipKernel<<<grid, block>>>(src_buffer, dst_buffer,
-                               width, height,
+    flipKernel<<<grid, block>>>(buffer, width, height,
                                flip_horizontal, flip_vertical);
     
     cudaDeviceSynchronize();
