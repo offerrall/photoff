@@ -6,10 +6,10 @@ from typing import Annotated
 from functogui import App, imageFileReturn, intUi, fileUi
 
 def stroke_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
-                    stroke_width: Annotated[int, intUi(min_value=1, max_value=200)] = 5,
-                    stroke_color: tuple[int, int, int, int] = (0, 255, 0, 255),
-                    inner: bool = False
-                    ) -> Annotated[str, imageFileReturn]:
+              stroke_width: Annotated[int, intUi(min_value=1, max_value=200)] = 5,
+              stroke_color: tuple[int, int, int, int] = (0, 255, 0, 255),
+              inner: bool = False
+              ) -> Annotated[str, imageFileReturn]:
     
     path = "./assets/stroke_test.png"
     src_image = load_image(image)

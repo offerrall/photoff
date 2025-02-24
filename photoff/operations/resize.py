@@ -17,11 +17,6 @@ def resize(image: CudaImage,
     if dst_image is None:
         result = CudaImage(width, height)
     else:
-        if dst_image.width != width or dst_image.height != height:
-            raise ValueError(
-                f"Destination image size ({dst_image.width}x{dst_image.height}) "
-                f"does not match target size ({width}x{height})"
-            )
         result = dst_image
     
     if method == ResizeMethod.BILINEAR:
