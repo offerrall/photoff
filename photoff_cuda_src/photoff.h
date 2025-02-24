@@ -96,14 +96,6 @@ __declspec(dllexport) void apply_flip(uchar4* buffer,
                                       bool flip_horizontal,
                                       bool flip_vertical);
 
-__declspec(dllexport) void crop_image(const uchar4* src_buffer,
-                                      uchar4* dst_buffer,
-                                      uint32_t src_width,
-                                      uint32_t src_height,
-                                      uint32_t dst_width,
-                                      uint32_t dst_height,
-                                      int crop_x,
-                                      int crop_y);
 
 // ---------------------------------------------------------------------------
 
@@ -129,6 +121,15 @@ __declspec(dllexport) void resize_bicubic(uchar4* dst,
                                           uint32_t dst_height,
                                           uint32_t src_width,
                                           uint32_t src_height);
+
+__declspec(dllexport) void crop_image(const uchar4* src_buffer,
+                                      uchar4* dst_buffer,
+                                      uint32_t src_width,
+                                      uint32_t src_height,
+                                      uint32_t dst_width,
+                                      uint32_t dst_height,
+                                      int crop_x,
+                                      int crop_y);
 
 // ---------------------------------------------------------------------------
 
