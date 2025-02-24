@@ -1,5 +1,4 @@
 from photoff.operations.filters import apply_stroke
-from photoff.operations.blend import blend
 from photoff.io import save_image, load_image
 from photoff import RGBA, CudaImage
 
@@ -16,7 +15,7 @@ def corner_border_ui(image: Annotated[str, fileUi] = "./visual_test/logo.png",
     src_image = load_image(image)
     image_size = (src_image.width, src_image.height)
     
-    dst_image = CudaImage(*image_size)
+    dst_image = src_image.copy()
     
     apply_stroke(src_image, dst_image, stroke_width, RGBA(*stroke_color), inner)    
     save_image(dst_image, path)

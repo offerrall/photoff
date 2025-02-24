@@ -33,7 +33,7 @@ def measure_stroke_performance(input_path="./test/logo.png",
     print("\nTesting original version (new buffer each time):")
     start_time = perf_counter()
     for _ in range(iterations):
-        temp_dst = CudaImage(*image_size)
+        temp_dst = src_image.copy()
         apply_stroke(src_image, temp_dst, stroke_width, stroke_color)
         temp_dst.free()
     end_time = perf_counter()

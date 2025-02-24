@@ -35,7 +35,7 @@ def measure_shadow_performance(input_path="./test/logo.png",
     print("\nTesting with new buffer each time:")
     start_time = perf_counter()
     for _ in range(iterations):
-        temp_dst = CudaImage(*image_size)
+        temp_dst = src_image.copy()
         apply_shadow(src_image, temp_dst, radius, intensity, shadow_color, inner)
         temp_dst.free()
     end_time = perf_counter()
