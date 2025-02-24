@@ -3,7 +3,7 @@ from photoff import RGBA, CudaImage
 from photoff.operations.filters import apply_shadow
 from photoff.io import load_image, save_image
 
-def measure_shadow_performance(input_path="./test/logo.png",
+def measure_shadow_performance(input_path="./assets/logo.png",
                              radius=10.0,
                              intensity=0.5,
                              shadow_color=RGBA(0, 0, 0, 128),
@@ -63,7 +63,7 @@ def measure_shadow_performance(input_path="./test/logo.png",
         'speedup_percentage': speedup
     }
 
-def compare_shadow_modes(input_path="./test/logo.png",
+def compare_shadow_modes(input_path="./assets/logo.png",
                         radius=10.0,
                         intensity=0.5,
                         shadow_color=RGBA(0, 0, 0, 128),

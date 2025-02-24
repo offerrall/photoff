@@ -3,7 +3,7 @@ from photoff import RGBA, CudaImage
 from photoff.operations.filters import apply_stroke
 from photoff.io import load_image, save_image
 
-def measure_stroke_performance(input_path="./test/logo.png",
+def measure_stroke_performance(input_path="./assets/logo.png",
                              stroke_width=4,
                              stroke_color=RGBA(0, 255, 0, 255),
                              iterations=100):
