@@ -11,6 +11,7 @@ def apply_stroke(src_image: CudaImage,
                  inner: bool = False,
                  src_copy_image: CudaImage = None,
                  ) -> None:
+    
     need_free = False
     if src_copy_image is None:
         src_copy_image = src_image.copy()
@@ -34,6 +35,7 @@ def apply_shadow(src_image: CudaImage,
                  inner: bool = False,
                  src_copy_image: CudaImage = None,
                  ) -> None:
+    
     need_free = False
     if src_copy_image is None:
         src_copy_image = src_image.copy()
