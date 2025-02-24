@@ -15,7 +15,7 @@ def blend_ui(color1: tuple[int, int, int, int] = (255, 0, 0, 255),
              y: Annotated[int, intUi(min_value=0, max_value=1080)] = 0
              ) -> Annotated[str, imageFileReturn]:
 
-    path = "./visual_test/blend.png"
+    path = "./assets/blend.png"
     image1 = CudaImage(1920, 1080)
     image2 = CudaImage(color2_width, color2_height)
 

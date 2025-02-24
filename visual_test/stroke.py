@@ -5,13 +5,13 @@ from photoff import RGBA, CudaImage
 from typing import Annotated
 from functogui import App, imageFileReturn, intUi, fileUi
 
-def corner_border_ui(image: Annotated[str, fileUi] = "./visual_test/logo.png",
+def corner_border_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
                     stroke_width: Annotated[int, intUi(min_value=1, max_value=200)] = 5,
                     stroke_color: tuple[int, int, int, int] = (0, 255, 0, 255),
                     inner: bool = False
                     ) -> Annotated[str, imageFileReturn]:
     
-    path = "./visual_test/stroke_test.png"
+    path = "./assets/stroke_test.png"
     src_image = load_image(image)
     image_size = (src_image.width, src_image.height)
     

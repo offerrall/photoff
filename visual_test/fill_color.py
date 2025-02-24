@@ -9,7 +9,7 @@ from functogui import App, imageFileReturn
 def fill_color_ui(color: tuple[int, int, int, int] = (255, 0, 0, 255)
                   ) -> Annotated[str, imageFileReturn]:
 
-    path = "./visual_test/fill_color.png"
+    path = "./assets/fill_color.png"
     image = CudaImage(1920, 1080)
 
     fill_color(image, RGBA(*color))

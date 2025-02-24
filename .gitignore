@@ -5,6 +5,8 @@ __pycache__/
 
 # C extensions
 *.so
+# assets folder
+assets/
 
 # Distribution / packaging
 .Python

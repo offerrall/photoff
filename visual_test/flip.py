@@ -6,11 +6,11 @@ from photoff import RGBA, CudaImage
 from typing import Annotated
 from functogui import App, imageFileReturn, fileUi
 
-def flip_ui(image: Annotated[str, fileUi] = "./visual_test/logo.png",
+def flip_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
             flip_horizontal: bool = False,
             flip_vertical: bool = False) -> Annotated[str, imageFileReturn]:
     
-    path = "./visual_test/flip_test.png"
+    path = "./assets/flip_test.png"
     src_image = load_image(image)
     
     apply_flip(src_image, flip_horizontal, flip_vertical)

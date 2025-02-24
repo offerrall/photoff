@@ -10,7 +10,7 @@ def corner_border_ui(color: tuple[int, int, int, int] = (255, 0, 0, 255),
                      border_size: Annotated[int, intUi(min_value=1, max_value=500)] = 500
                      ) -> Annotated[str, imageFileReturn]:
     
-    path = "./visual_test/corner_border.png"
+    path = "./assets/corner_border.png"
     image = CudaImage(1000, 1000)
 
     fill_color(image, RGBA(*color))

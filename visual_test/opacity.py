@@ -9,7 +9,7 @@ from functogui import App, imageFileReturn
 
 def apply_opacity_ui(opacity: float = 0.5) -> Annotated[str, imageFileReturn]:
 
-    path = "./visual_test/fill_color.png"
+    path = "./assets/opacity.png"
     image = CudaImage(1920, 1080)
 
     fill_color(image, RGBA(*(255, 0, 0, 255)))
