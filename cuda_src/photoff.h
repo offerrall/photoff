@@ -14,14 +14,6 @@ __declspec(dllexport) uchar4* copy_buffer(const uchar4* src_buffer,
 
 __declspec(dllexport) void free_buffer(uchar4* buffer);
 
-__declspec(dllexport) void fill_color(uchar4* buffer,
-                                      uint32_t width,
-                                      uint32_t height,
-                                      unsigned char r,
-                                      unsigned char g, 
-                                      unsigned char b,
-                                      unsigned char a);
-
 // ---------------------------------------------------------------------------
 
 // Host - Device Memory Transfer ----------------------------------------------
