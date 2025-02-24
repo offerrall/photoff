@@ -1,8 +1,8 @@
 from photoff.operations.filters import apply_shadow
 from photoff.io import save_image, load_image
-from photoff import RGBA, CudaImage
+from photoff import RGBA
 from typing import Annotated
-from functogui import App, imageFileReturn, intUi, floatUi, fileUi
+from functogui import App, imageFileReturn, floatUi, fileUi
 
 def shadow_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
               radius: Annotated[float, floatUi(min_value=1.0, max_value=100.0)] = 10.0,
@@ -13,15 +13,11 @@ def shadow_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
     
     path = "./assets/shadow_test.png"
     src_image = load_image(image)
-    image_size = (src_image.width, src_image.height)
     
-    dst_image = src_image.copy()
-    
-    apply_shadow(src_image, dst_image, radius, intensity, RGBA(*shadow_color), inner)
-    save_image(dst_image, path)
+    apply_shadow(src_image, radius, intensity, RGBA(*shadow_color), inner)
+    save_image(src_image, path)
     
     src_image.free()
-    dst_image.free()
     
     return path
 

@@ -7,7 +7,7 @@ from typing import Annotated
 from functogui import App, imageFileReturn
 
 
-def apply_opacity_ui(opacity: float = 0.5) -> Annotated[str, imageFileReturn]:
+def opacity_ui(opacity: float = 0.5) -> Annotated[str, imageFileReturn]:
 
     path = "./assets/opacity.png"
     image = CudaImage(1920, 1080)
@@ -22,4 +22,4 @@ def apply_opacity_ui(opacity: float = 0.5) -> Annotated[str, imageFileReturn]:
 
 
 
-App(apply_opacity_ui)
+App(opacity_ui)
