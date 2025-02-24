@@ -27,8 +27,8 @@ def resize(image: CudaImage,
     
     if method == ResizeMethod.BILINEAR:
         _lib.resize_bilinear(
-            result._ptr,
-            image._ptr,
+            result.buffer,
+            image.buffer,
             width,
             height,
             image.width,
@@ -36,8 +36,8 @@ def resize(image: CudaImage,
         )
     elif method == ResizeMethod.NEAREST:
         _lib.resize_nearest(
-            result._ptr,
-            image._ptr,
+            result.buffer,
+            image.buffer,
             width,
             height,
             image.width,
@@ -45,8 +45,8 @@ def resize(image: CudaImage,
         )
     elif method == ResizeMethod.BICUBIC:
         _lib.resize_bicubic(
-            result._ptr,
-            image._ptr,
+            result.buffer,
+            image.buffer,
             width,
             height,
             image.width,
