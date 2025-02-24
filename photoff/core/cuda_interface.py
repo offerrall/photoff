@@ -42,7 +42,8 @@ ffi.cdef("""
                              uint32_t height,
                              uint32_t size);
 
-    void apply_stroke(uchar4* buffer,
+    void apply_stroke(const uchar4* src_buffer,
+                      uchar4* dst_buffer,
                       uint32_t width,
                       uint32_t height,
                       int stroke_width,

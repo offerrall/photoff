@@ -529,7 +529,8 @@ void apply_corner_radius(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_stroke(uchar4* buffer,
+void apply_stroke(const uchar4* src_buffer,
+                  uchar4* dst_buffer,
                   uint32_t width,
                   uint32_t height,
                   int stroke_width,
@@ -538,46 +539,38 @@ void apply_stroke(uchar4* buffer,
                   unsigned char stroke_b,
                   unsigned char stroke_a,
                   int mode) {
-        if (!buffer) return;
-        
-        uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
-        dim3 block(16, 16);
-        dim3 grid((width + block.x - 1) / block.x,
-                  (height + block.y - 1) / block.y);
-        
-        uchar4* temp_buffer = nullptr;
-        cudaMalloc(&temp_buffer, width * height * sizeof(uchar4));
-        if (!temp_buffer) return;
-        
-        cudaMemcpy(temp_buffer, buffer, width * height * sizeof(uchar4),
-                   cudaMemcpyDeviceToDevice);
-        
-        if (mode == 0) {
-            strokeKernel<<<grid, block>>>(temp_buffer, buffer, width, height,
+    if (!src_buffer || !dst_buffer) return;
+    
+    uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+              (height + block.y - 1) / block.y);
+    
+    if (mode == 0) {
+        strokeKernel<<<grid, block>>>(src_buffer, dst_buffer, width, height,
+                                     stroke_width, stroke_color);
+    } else if (mode == 1) {
+        innerStrokeKernel<<<grid, block>>>(src_buffer, dst_buffer, width, height,
                                           stroke_width, stroke_color);
-        } else if (mode == 1) {
-            innerStrokeKernel<<<grid, block>>>(temp_buffer, buffer, width, height,
-                                               stroke_width, stroke_color);
-        }
-        
-        cudaDeviceSynchronize();
-        cudaFree(temp_buffer);
     }
+    
+    cudaDeviceSynchronize();
+}
 
-    void apply_opacity(uchar4* buffer,
-                       uint32_t width,
-                       uint32_t height,
-                       float opacity) {
-        if (!buffer) return;
-        
-        opacity = min(max(opacity, 0.0f), 1.0f);
+void apply_opacity(uchar4* buffer,
+                    uint32_t width,
+                    uint32_t height,
+                    float opacity) {
+    if (!buffer) return;
+    
+    opacity = min(max(opacity, 0.0f), 1.0f);
 
-        dim3 block(16, 16);
-        dim3 grid((width + block.x - 1) / block.x,
-                (height + block.y - 1) / block.y);
-                
-        applyOpacityKernel<<<grid, block>>>(buffer, width, height, opacity);
-        cudaDeviceSynchronize();
-    }
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+            (height + block.y - 1) / block.y);
+            
+    applyOpacityKernel<<<grid, block>>>(buffer, width, height, opacity);
+    cudaDeviceSynchronize();
+}
 
 }

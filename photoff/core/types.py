@@ -12,6 +12,9 @@ class RGBA:
 
 
 class CudaImage:
+    width: int
+    height: int
+    buffer: CudaBuffer
 
     def __init__(self, width: int, height: int, auto_init: bool = True):
         self.width = width
