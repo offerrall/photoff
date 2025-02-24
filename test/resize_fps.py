@@ -7,8 +7,8 @@ from photoff import RGBA
 def measure_resize_fps(
     src_width=1920,
     src_height=1080,
-    dst_width=1280,
-    dst_height=720,
+    dst_width=1920,
+    dst_height=1080,
     method=ResizeMethod.BILINEAR,
     iterations=100
 ):

@@ -349,6 +349,24 @@ __global__ void innerStrokeKernel(const uchar4* src,
     dst[idx] = isBorder ? stroke_color : pixel;
 }
 
+
+__global__ void applyOpacityKernel(uchar4* buffer, 
+                                  uint32_t width, 
+                                  uint32_t height,
+                                  float opacity) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x >= width || y >= height) return;
+
+    int idx = y * width + x;
+    uchar4 pixel = buffer[idx];
+    
+    float currentAlpha = pixel.w / 255.0f;
+    float newAlpha = currentAlpha * opacity;
+    buffer[idx].w = static_cast<unsigned char>(newAlpha * 255.0f);
+}
+
 extern "C" {
 
 uchar4* create_buffer(uint32_t width,
@@ -544,6 +562,22 @@ void apply_stroke(uchar4* buffer,
         
         cudaDeviceSynchronize();
         cudaFree(temp_buffer);
+    }
+
+    void apply_opacity(uchar4* buffer,
+                       uint32_t width,
+                       uint32_t height,
+                       float opacity) {
+        if (!buffer) return;
+        
+        opacity = min(max(opacity, 0.0f), 1.0f);
+
+        dim3 block(16, 16);
+        dim3 grid((width + block.x - 1) / block.x,
+                (height + block.y - 1) / block.y);
+                
+        applyOpacityKernel<<<grid, block>>>(buffer, width, height, opacity);
+        cudaDeviceSynchronize();
     }
 
 }

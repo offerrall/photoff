@@ -72,6 +72,11 @@ ffi.cdef("""
                         uint32_t dst_height,
                         uint32_t src_width,
                         uint32_t src_height);
+
+    void apply_opacity(uchar4* buffer,
+                       uint32_t width,
+                       uint32_t height,
+                       float opacity);
     
 """)
 

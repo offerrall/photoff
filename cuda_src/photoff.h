@@ -60,6 +60,7 @@ __declspec(dllexport) void fill_color(uchar4* buffer,
 // ---------------------------------------------------------------------------
 
 // Filters -------------------------------------------------------------------
+
 __declspec(dllexport) void apply_corner_radius(uchar4* buffer,
                                                uint32_t width,
                                                uint32_t height,
@@ -74,6 +75,11 @@ __declspec(dllexport) void apply_stroke(uchar4* buffer,
                                         unsigned char stroke_b,
                                         unsigned char stroke_a,
                                         int mode);
+
+__declspec(dllexport) void apply_opacity(uchar4* buffer,
+                                         uint32_t width,
+                                         uint32_t height,
+                                         float opacity);
 
 // ---------------------------------------------------------------------------
 

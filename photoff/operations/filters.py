@@ -10,3 +10,7 @@ def apply_stroke(image: CudaImage, stroke_width: int, stroke_color: RGBA, inner:
     _lib.apply_stroke(image.buffer, image.width, image.height,
                       stroke_width, stroke_color.r, stroke_color.g,
                       stroke_color.b, stroke_color.a, int(inner))
+
+def apply_opacity(image: CudaImage, opacity: float) -> None:
+    
+    _lib.apply_opacity(image.buffer, image.width, image.height, opacity)
