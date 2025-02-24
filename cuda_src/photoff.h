@@ -98,6 +98,13 @@ __declspec(dllexport) void apply_opacity(uchar4* buffer,
                                          uint32_t height,
                                          float opacity);
 
+__declspec(dllexport) void apply_flip(const uchar4* src_buffer,
+                                      uchar4* dst_buffer,
+                                      uint32_t width,
+                                      uint32_t height,
+                                      bool flip_horizontal,
+                                      bool flip_vertical);
+
 // ---------------------------------------------------------------------------
 
 // Resize --------------------------------------------------------------------
