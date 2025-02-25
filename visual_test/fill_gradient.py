@@ -12,7 +12,9 @@ def fill_gradient_ui(color1: tuple[int, int, int, int] = (255, 0, 0, 255),
                      ) -> Annotated[str, imageFileReturn]:
     
     path = "./assets/fill_gradient.png"
-    image = CudaImage(1920, 1080)
+    image = CudaImage(5000, 5000) # Example for extra buffer space
+    image.height = 1080
+    image.width = 1920
 
     directions = {"horizontal": 0, "vertical": 1, "diagonal": 2, "radial": 3}
     dir_value = directions[direction]
