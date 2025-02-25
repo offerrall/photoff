@@ -81,7 +81,8 @@ def cover_image_in_container(image: CudaImage,
                              offset_y: int = 0,
                              background_color: RGBA = RGBA(0, 0, 0, 0),
                              container_image_cache: CudaImage = None,
-                             resize_image_cache: CudaImage = None
+                             resize_image_cache: CudaImage = None,
+                             resize_mode: ResizeMethod = ResizeMethod.BICUBIC
                              ) -> CudaImage:
 
     scale = max(container_width / image.width, container_height / image.height)
@@ -97,7 +98,7 @@ def cover_image_in_container(image: CudaImage,
             raise ValueError(f"Resize cache dimensions must match: {new_width}x{new_height}, got {resize_image_cache.width}x{resize_image_cache.height}")
         resized_image = resize_image_cache
     
-    resize(image, new_width, new_height, method=ResizeMethod.BICUBIC, resize_image_cache=resized_image)
+    resize(image, new_width, new_height, method=resize_mode, resize_image_cache=resized_image)
     
     if container_image_cache is None:
         container = CudaImage(container_width, container_height)
