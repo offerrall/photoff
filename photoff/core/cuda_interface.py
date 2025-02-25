@@ -72,10 +72,12 @@ ffi.cdef("""
                       unsigned char shadow_r, unsigned char shadow_g,
                       unsigned char shadow_b, unsigned char shadow_a,
                       int mode);
-
-    void gaussian_blur(uchar4* buffer, const uchar4* copy_buffer,
-                       uint32_t width, uint32_t height,
-                       float radius);         
+    
+    void apply_gaussian_blur(uchar4* buffer,
+                             const uchar4* copy_buffer,
+                             uint32_t width,
+                             uint32_t height,
+                             float radius);      
 
     // Resize / Crop
     void resize_bilinear(uchar4* dst, const uchar4* src,

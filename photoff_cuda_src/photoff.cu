@@ -974,11 +974,11 @@ void fill_gradient(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void gaussian_blur(uchar4* buffer,
-                   const uchar4* copy_buffer,
-                   uint32_t width,
-                   uint32_t height,
-                   float radius) {
+void apply_gaussian_blur(uchar4* buffer,
+                         const uchar4* copy_buffer,
+                         uint32_t width,
+                         uint32_t height,
+                         float radius) {
     
     dim3 block(16, 16);
     dim3 grid((width + block.x - 1) / block.x,

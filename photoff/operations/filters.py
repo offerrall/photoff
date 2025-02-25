@@ -95,7 +95,7 @@ def apply_gaussian_blur(image: CudaImage,
         if image_copy_cache.width != image.width or image_copy_cache.height != image.height:
             raise ValueError(f"El buffer auxiliar debe coincidir con las dimensiones de la imagen original: {image.width}x{image.height}, recibido {image_copy_cache.width}x{image_copy_cache.height}")
     
-    _lib.gaussian_blur(image.buffer,
+    _lib.apply_gaussian_blur(image.buffer,
                        image_copy_cache.buffer,
                        image.width,
                        image.height,

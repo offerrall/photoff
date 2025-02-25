@@ -90,6 +90,10 @@ __declspec(dllexport) void apply_flip(uchar4* buffer,
                                       bool flip_horizontal,
                                       bool flip_vertical);
 
+__declspec(dllexport) void apply_grayscale(uchar4* buffer,
+                                           uint32_t width,
+                                           uint32_t height);
+
 // Copy needed
 __declspec(dllexport) void apply_stroke(uchar4* buffer,
                                         const uchar4* copy_buffer,
@@ -113,21 +117,17 @@ __declspec(dllexport) void apply_shadow(uchar4* buffer,
                                         unsigned char shadow_b,
                                         unsigned char shadow_a,
                                         int mode);
-
-__declspec(dllexport) void apply_grayscale(uchar4* buffer,
-                                           uint32_t width,
-                                           uint32_t height);
                                            
-__declspec(dllexport) void gaussian_blur(uchar4* buffer,
-                                         const uchar4* copy_buffer,
-                                         uint32_t width,
-                                         uint32_t height,
-                                         float radius);
+__declspec(dllexport) void apply_gaussian_blur(uchar4* buffer,
+                                               const uchar4* copy_buffer,
+                                               uint32_t width,
+                                               uint32_t height,
+                                               float radius);
 
 
 // ---------------------------------------------------------------------------
 
-// Resize --------------------------------------------------------------------
+// Resize and Crop --------------------------------------------------------------------
 
 __declspec(dllexport) void resize_bilinear(uchar4* dst,
                                            const uchar4* src,
