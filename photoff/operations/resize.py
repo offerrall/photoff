@@ -11,15 +11,15 @@ def resize(image: CudaImage,
            width: int, 
            height: int, 
            method: ResizeMethod = ResizeMethod.BICUBIC,
-           dst_image: CudaImage = None
+           resize_image: CudaImage = None
            ) -> CudaImage:
     
-    if dst_image is None:
+    if resize_image is None:
         result = CudaImage(width, height)
     else:
-        if dst_image.width != width or dst_image.height != height:
-            raise ValueError(f"Destination image dimensions must match resize dimensions: {width}x{height}, got {dst_image.width}x{dst_image.height}")
-        result = dst_image
+        if resize_image.width != width or resize_image.height != height:
+            raise ValueError(f"Destination image dimensions must match resize dimensions: {width}x{height}, got {resize_image.width}x{resize_image.height}")
+        result = resize_image
     
     if method == ResizeMethod.BILINEAR:
         _lib.resize_bilinear(
@@ -53,34 +53,34 @@ def resize(image: CudaImage,
         
     return result
 
-def crop_margins(src_image: CudaImage, 
+def crop_margins(image: CudaImage, 
                  left: int = 0, 
                  top: int = 0, 
                  right: int = 0, 
                  bottom: int = 0,
-                 dst_image: CudaImage = None) -> CudaImage:
+                 crop_image: CudaImage = None) -> CudaImage:
 
     if left < 0 or top < 0 or right < 0 or bottom < 0:
         raise ValueError("Margins cannot be negative")
         
-    if left + right >= src_image.width or top + bottom >= src_image.height:
+    if left + right >= image.width or top + bottom >= image.height:
         raise ValueError("Total margins exceed image dimensions")
     
-    new_width = src_image.width - left - right
-    new_height = src_image.height - top - bottom
+    new_width = image.width - left - right
+    new_height = image.height - top - bottom
     
-    if dst_image is None:
+    if crop_image is None:
         result = CudaImage(new_width, new_height)
     else:
-        if dst_image.width != new_width or dst_image.height != new_height:
+        if crop_image.width != new_width or crop_image.height != new_height:
             raise ValueError(f"Destination image dimensions must match crop result: {new_width}x{new_height}")
-        result = dst_image
-    
+        result = crop_image
+
     _lib.crop_image(
-        src_image.buffer,
         result.buffer,
-        src_image.width,
-        src_image.height,
+        image.buffer,
+        image.width,
+        image.height,
         new_width,
         new_height,
         left,

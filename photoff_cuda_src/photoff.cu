@@ -704,8 +704,8 @@ void apply_corner_radius(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_stroke(const uchar4* src_buffer,
-                  uchar4* dst_buffer,
+void apply_stroke(uchar4* src_buffer,
+                  const uchar4* copy_src_buffer,
                   uint32_t width,
                   uint32_t height,
                   int stroke_width,
@@ -714,23 +714,23 @@ void apply_stroke(const uchar4* src_buffer,
                   unsigned char stroke_b,
                   unsigned char stroke_a,
                   int mode) {
-    if (!src_buffer || !dst_buffer) return;
-    
+
     uchar4 stroke_color = make_uchar4(stroke_r, stroke_g, stroke_b, stroke_a);
     dim3 block(16, 16);
     dim3 grid((width + block.x - 1) / block.x,
               (height + block.y - 1) / block.y);
     
     if (mode == 0) {
-        strokeKernel<<<grid, block>>>(src_buffer, dst_buffer, width, height,
-                                     stroke_width, stroke_color);
+        strokeKernel<<<grid, block>>>(copy_src_buffer, src_buffer, width, height,
+                                        stroke_width, stroke_color);
     } else if (mode == 1) {
-        innerStrokeKernel<<<grid, block>>>(src_buffer, dst_buffer, width, height,
-                                          stroke_width, stroke_color);
+        innerStrokeKernel<<<grid, block>>>(copy_src_buffer, src_buffer, width, height,
+                                             stroke_width, stroke_color);
     }
     
     cudaDeviceSynchronize();
 }
+
 
 void apply_opacity(uchar4* buffer,
                    uint32_t width,
@@ -748,8 +748,8 @@ void apply_opacity(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_shadow(const uchar4* src_buffer,
-                  uchar4* dst_buffer,
+void apply_shadow(uchar4* src_buffer,
+                  const uchar4* copy_src_buffer,
                   uint32_t width,
                   uint32_t height,
                   float radius,
@@ -759,22 +759,21 @@ void apply_shadow(const uchar4* src_buffer,
                   unsigned char shadow_b,
                   unsigned char shadow_a,
                   int mode) {
-    if (!src_buffer || !dst_buffer) return;
-    
     dim3 block(16, 16);
     dim3 grid((width + block.x - 1) / block.x,
-                (height + block.y - 1) / block.y);
+              (height + block.y - 1) / block.y);
     
     uchar4 shadow_color = make_uchar4(shadow_r, shadow_g, shadow_b, shadow_a);
     bool isInner = mode == 1;
     
-    shadowKernel<<<grid, block>>>(src_buffer, dst_buffer,
-                                width, height,
-                                radius, intensity,
-                                shadow_color, isInner);
+    shadowKernel<<<grid, block>>>(copy_src_buffer, src_buffer,
+                                  width, height,
+                                  radius, intensity,
+                                  shadow_color, isInner);
     
     cudaDeviceSynchronize();
 }
+
 
 void apply_flip(uchar4* buffer,
                 uint32_t width,
@@ -793,21 +792,21 @@ void apply_flip(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void crop_image(const uchar4* src_buffer,
-                uchar4* dst_buffer,
+void crop_image(uchar4* dst,
+                const uchar4* src,
                 uint32_t src_width,
                 uint32_t src_height,
                 uint32_t dst_width,
                 uint32_t dst_height,
                 int crop_x,
                 int crop_y) {
-    if (!src_buffer || !dst_buffer) return;
+    if (!src || !dst) return;
 
     dim3 block(16, 16);
     dim3 grid((dst_width + block.x - 1) / block.x,
               (dst_height + block.y - 1) / block.y);
 
-    cropKernel<<<grid, block>>>(src_buffer, dst_buffer,
+    cropKernel<<<grid, block>>>(src, dst,
                                 src_width, src_height,
                                 dst_width, dst_height,
                                 crop_x, crop_y);

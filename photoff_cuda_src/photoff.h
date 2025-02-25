@@ -72,8 +72,8 @@ __declspec(dllexport) void apply_corner_radius(uchar4* buffer,
                                                uint32_t height,
                                                uint32_t size);
 
-__declspec(dllexport) void apply_stroke(const uchar4* src_buffer,
-                                        uchar4* dst_buffer,
+__declspec(dllexport) void apply_stroke(uchar4* src_buffer,
+                                        const uchar4* copy_src_buffer,
                                         uint32_t width,
                                         uint32_t height,
                                         int stroke_width,
@@ -83,8 +83,8 @@ __declspec(dllexport) void apply_stroke(const uchar4* src_buffer,
                                         unsigned char stroke_a,
                                         int mode);
 
-__declspec(dllexport) void apply_shadow(const uchar4* src_buffer,
-                                        uchar4* dst_buffer,
+__declspec(dllexport) void apply_shadow(uchar4* src_buffer,
+                                        const uchar4* copy_src_buffer,
                                         uint32_t width,
                                         uint32_t height,
                                         float radius,
@@ -131,8 +131,8 @@ __declspec(dllexport) void resize_bicubic(uchar4* dst,
                                           uint32_t src_width,
                                           uint32_t src_height);
 
-__declspec(dllexport) void crop_image(const uchar4* src_buffer,
-                                      uchar4* dst_buffer,
+__declspec(dllexport) void crop_image(uchar4* dst,
+                                      const uchar4* src,
                                       uint32_t src_width,
                                       uint32_t src_height,
                                       uint32_t dst_width,

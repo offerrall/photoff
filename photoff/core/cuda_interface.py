@@ -97,8 +97,8 @@ ffi.cdef("""
                     bool flip_horizontal,
                     bool flip_vertical);
 
-    void crop_image(const uchar4* src_buffer,
-                    uchar4* dst_buffer,
+    void crop_image(uchar4* dst,
+                    const uchar4* src,
                     uint32_t src_width,
                     uint32_t src_height,
                     uint32_t dst_width,
