@@ -1,4 +1,4 @@
-from photoff.operations.composite import blend_aligned
+from photoff.operations.utils import blend_aligned
 from photoff.operations.fill import fill_color
 from photoff.io import save_image, load_image
 from photoff import RGBA, CudaImage
@@ -15,8 +15,8 @@ def blend_aligned_ui(
         "center", "top", "bottom", "left", "right", 
         "top-left", "top-right", "bottom-left", "bottom-right"
     ])] = "center",
-    offset_x: Annotated[int, intUi(min_value=-500, max_value=500)] = 0,
-    offset_y: Annotated[int, intUi(min_value=-500, max_value=500)] = 0
+    offset_x: Annotated[int, intUi(max_value=500)] = 0,
+    offset_y: Annotated[int, intUi(max_value=500)] = 0
 ) -> Annotated[str, imageFileReturn]:
 
     path = "./assets/blend_aligned_test.png"
