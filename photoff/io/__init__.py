@@ -1,12 +1,8 @@
 from ..core import ffi
 from ..core.buffer import copy_to_host, copy_to_device
 from ..core.types import CudaImage
-
-try:
-    from PIL import Image
-    import numpy as np
-except ImportError:
-    raise ImportError("Pillow and numpy are required for image I/O")
+from PIL import Image
+import numpy as np
 
 
 def save_image(image: CudaImage,
