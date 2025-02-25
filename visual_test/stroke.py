@@ -15,7 +15,7 @@ def stroke_ui(
     src_image = load_image(image)
     src_image_copy = load_image(image)
     
-    apply_stroke(src_image, stroke_width, RGBA(*stroke_color), image_copy_cache=src_image_copy, inner=inner)
+    apply_stroke(src_image, stroke_width, RGBA(*stroke_color), image_copy_cache=None, inner=inner)
     
     save_image(src_image, path)
     src_image.free()

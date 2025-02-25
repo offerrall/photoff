@@ -24,6 +24,16 @@ __global__ void cropKernel(const uchar4* src,
     }
 }
 
+__global__ void copyBufferKernel(uchar4* dst, const uchar4* src, uint32_t width, uint32_t height) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    int idx = y * width + x;
+    dst[idx] = src[idx];
+}
+
 __device__ float calculateShadowWeight(int x,
                                        int y,
                                        const uchar4* buffer,
@@ -572,8 +582,21 @@ void copy_buffers_same_size(uchar4* dst,
                             const uchar4* src,
                             uint32_t width,
                             uint32_t height) {
-    size_t size = width * height * sizeof(uchar4);
-    cudaMemcpy(dst, src, size, cudaMemcpyDeviceToDevice);
+    if (!dst || !src) {
+        printf("Error: Null pointer provided to copy_buffers_same_size\n");
+        return;
+    }
+    
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x, (height + block.y - 1) / block.y);
+    
+    copyBufferKernel<<<grid, block>>>(dst, src, width, height);
+    
+    cudaError_t err = cudaGetLastError();
+    if (err != cudaSuccess) {
+        printf("CUDA Error in copy_buffers_same_size: %s\n", cudaGetErrorString(err));
+    }
+    
     cudaDeviceSynchronize();
 }
 
