@@ -5,12 +5,12 @@ from typing import Annotated
 from functogui import App, imageFileReturn, intUi, fileUi
 
 def crop_margins_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
-                   left: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
-                   top: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
-                   right: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
-                   bottom: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
-                   reuse_buffer: bool = True
-                   ) -> Annotated[str, imageFileReturn]:
+                    left: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
+                    top: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
+                    right: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
+                    bottom: Annotated[int, intUi(min_value=0, max_value=500)] = 0,
+                    reuse_buffer: bool = True
+                    ) -> Annotated[str, imageFileReturn]:
     
     path = "./assets/crop_margins_test.png"
     
