@@ -50,4 +50,34 @@ def apply_stroke(image: CudaImage,
     
     if need_free:
         image_copy_cache.free()
+
+def apply_shadow(image: CudaImage,
+                 radius: float,
+                 intensity: float,
+                 shadow_color: RGBA,
+                 image_copy_cache: CudaImage = None,
+                 inner: bool = False) -> None:
     
+    need_free = False
+    if image_copy_cache is None:
+        image_copy_cache = CudaImage(image.width, image.height)
+        copy_buffers_same_size(image_copy_cache.buffer, image.buffer, image.width, image.height)
+        need_free = True
+    else:
+        if image_copy_cache.width != image.width or image_copy_cache.height != image.height:
+            raise ValueError(f"Destination image dimensions must match original image dimensions: {image.width}x{image.height}, got {image_copy_cache.width}x{image_copy_cache.height}")
+    
+    _lib.apply_shadow(image.buffer,
+                        image_copy_cache.buffer,
+                        image.width,
+                        image.height,
+                        radius,
+                        intensity,
+                        shadow_color.r,
+                        shadow_color.g,
+                        shadow_color.b,
+                        shadow_color.a,
+                        int(inner))
+    
+    if need_free:
+        image_copy_cache.free()
