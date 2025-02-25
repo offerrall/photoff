@@ -468,7 +468,6 @@ __global__ void flipKernel(uchar4* buffer,
                            uint32_t height,
                            bool flipHorizontal,
                            bool flipVertical) {
-    
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -491,11 +490,66 @@ __global__ void flipKernel(uchar4* buffer,
 }
 
 
+__global__ void fillGradientKernel(uchar4* buffer, 
+                                   uint32_t width,
+                                   uint32_t height,
+                                   unsigned char r1,
+                                   unsigned char g1,
+                                   unsigned char b1,
+                                   unsigned char a1,
+                                   unsigned char r2,
+                                   unsigned char g2,
+                                   unsigned char b2,
+                                   unsigned char a2,
+                                   int direction,
+                                   bool seamless) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if (x >= (int)width || y >= (int)height) return;
+
+    float factor = 0.0f;
+
+    float nx = (float)x / (float)(width - 1) - 0.5f;
+    float ny = (float)y / (float)(height - 1) - 0.5f;
+
+    switch(direction) {
+        case 0: // horizontal
+            factor = (float)x / (float)(width - 1);
+            break;
+        case 1: // vertical
+            factor = (float)y / (float)(height - 1);
+            break;
+        case 2: // diagonal
+            float u = (float)x / (float)(width - 1);
+            float v = (float)y / (float)(height - 1);
+            factor = (u + v) * 0.5f;
+            break;
+        case 3: // radial
+            factor = sqrtf(nx*nx + ny*ny) * 1.414f;
+            factor = min(1.0f, factor);
+            break;
+    }
+
+    if (seamless) {
+        factor = factor < 0.5f ? 
+                factor * 2.0f : 
+                2.0f * (1.0f - factor);
+    }
+
+    unsigned char R = (unsigned char)(r1 + (r2 - r1) * factor);
+    unsigned char G = (unsigned char)(g1 + (g2 - g1) * factor);
+    unsigned char B = (unsigned char)(b1 + (b2 - b1) * factor);
+    unsigned char A = (unsigned char)(a1 + (a2 - a1) * factor);
+
+    int idx = y * width + x;
+    buffer[idx] = make_uchar4(R, G, B, A);
+}
+
 extern "C" {
 
 uchar4* create_buffer(uint32_t width,
                       uint32_t height) {
-
     uchar4* buffer;
     cudaError_t err = cudaMalloc(&buffer, width * height * sizeof(uchar4));
     if (err != cudaSuccess) {
@@ -539,7 +593,6 @@ void copy_to_device(uchar4* d_dst,
                     const uchar4* h_src,
                     uint32_t width,
                     uint32_t height) {
-
     if (!d_dst || !h_src) return;
 
     cudaMemcpy(d_dst, h_src, width * height * sizeof(uchar4), 
@@ -552,7 +605,6 @@ void copy_to_host(uchar4* h_dst,
                   const uchar4* d_src,
                   uint32_t width,
                   uint32_t height) {
-
     if (!h_dst || !d_src) return;
 
     cudaMemcpy(h_dst, d_src, width * height * sizeof(uchar4), 
@@ -568,8 +620,7 @@ void blend_buffers(uchar4* dst,
                    uint32_t src_width,
                    uint32_t src_height,
                    int32_t x,
-                   int32_t y) {
-                    
+                   int32_t y) {          
     if (!dst || !src) return;
 
     dim3 block(16, 16);
@@ -646,7 +697,6 @@ void fill_color(uchar4* buffer,
                 unsigned char g,
                 unsigned char b,
                 unsigned char a) {
-
     if (!buffer) return;
 
     uchar4 color = make_uchar4(r, g, b, a);
@@ -784,5 +834,33 @@ void crop_image(const uchar4* src_buffer,
                                 crop_x, crop_y);
     cudaDeviceSynchronize();
 }
+
+void fill_gradient(uchar4* buffer,
+                   uint32_t width,
+                   uint32_t height,
+                   unsigned char r1,
+                   unsigned char g1,
+                   unsigned char b1,
+                   unsigned char a1,
+                   unsigned char r2,
+                   unsigned char g2,
+                   unsigned char b2,
+                   unsigned char a2,
+                   int direction,
+                   bool seamless) {
+    if (!buffer) return;
+
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+              (height + block.y - 1) / block.y);
+
+    fillGradientKernel<<<grid, block>>>(buffer, width, height,
+                                            r1, g1, b1, a1,
+                                            r2, g2, b2, a2,
+                                            direction, seamless);
+    cudaDeviceSynchronize();
+}
+
+
 
 }

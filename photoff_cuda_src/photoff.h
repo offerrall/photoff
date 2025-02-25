@@ -53,6 +53,20 @@ __declspec(dllexport) void fill_color(uchar4* buffer,
                                       unsigned char b,
                                       unsigned char a);
 
+__declspec(dllexport) void fillGradientKernel(uchar4* buffer, 
+                                              uint32_t width,
+                                              uint32_t height,
+                                              unsigned char r1,
+                                              unsigned char g1,
+                                              unsigned char b1,
+                                              unsigned char a1,
+                                              unsigned char r2,
+                                              unsigned char g2,
+                                              unsigned char b2,
+                                              unsigned char a2,
+                                              int direction,
+                                              bool seamless);
+
 // ---------------------------------------------------------------------------
 
 // Filters -------------------------------------------------------------------
