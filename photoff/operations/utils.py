@@ -1,4 +1,4 @@
-from ..core.types import CudaImage
+from ..core.types import CudaImage, RGBA
 from .blend import blend
 from .fill import fill_color
 from .resize import resize, ResizeMethod
@@ -64,29 +64,56 @@ def blend_aligned(background: CudaImage,
     
     blend(background, image, x, y)
 
+def get_cover_resize_dimensions(image: CudaImage, 
+                                container_width: int,
+                                container_height: int) -> tuple[int, int]:
 
+    scale = max(container_width / image.width, container_height / image.height)
+    new_width = int(image.width * scale)
+    new_height = int(image.height * scale)
+    
+    return new_width, new_height
 
 def cover_image_in_container(image: CudaImage,
                              container_width: int,
                              container_height: int,
                              offset_x: int = 0,
                              offset_y: int = 0,
-                             background_color: tuple[int, int, int, int] = (255, 255, 255, 0)
+                             background_color: RGBA = RGBA(0, 0, 0, 0),
+                             container_image_cache: CudaImage = None,
+                             resize_image_cache: CudaImage = None
                              ) -> CudaImage:
 
     scale = max(container_width / image.width, container_height / image.height)
     new_width = int(image.width * scale)
     new_height = int(image.height * scale)
     
-    resized_image = resize(image, new_width, new_height, method=ResizeMethod.BICUBIC)
-
-    container = CudaImage(container_width, container_height)
+    need_free_resized = False
+    if resize_image_cache is None:
+        resized_image = CudaImage(new_width, new_height)
+        need_free_resized = True
+    else:
+        if resize_image_cache.width != new_width or resize_image_cache.height != new_height:
+            raise ValueError(f"Resize cache dimensions must match: {new_width}x{new_height}, got {resize_image_cache.width}x{resize_image_cache.height}")
+        resized_image = resize_image_cache
+    
+    resize(image, new_width, new_height, method=ResizeMethod.BICUBIC, resize_image_cache=resized_image)
+    
+    if container_image_cache is None:
+        container = CudaImage(container_width, container_height)
+    else:
+        if container_image_cache.width != container_width or container_image_cache.height != container_height:
+            raise ValueError(f"Container cache dimensions must match: {container_width}x{container_height}, got {container_image_cache.width}x{container_image_cache.height}")
+        container = container_image_cache
+    
     fill_color(container, background_color)
     
     x = (container_width - new_width) // 2 + offset_x
     y = (container_height - new_height) // 2 + offset_y
     
     blend(container, resized_image, x, y)
-    
-    resized_image.free()
+
+    if need_free_resized:
+        resized_image.free()
+
     return container
