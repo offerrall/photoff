@@ -72,3 +72,4 @@ def apply_flip(image: CudaImage,
                     image.height,
                     flip_horizontal,
                     flip_vertical)
+

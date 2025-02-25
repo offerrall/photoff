@@ -1,106 +1,5 @@
 #include "photoff.h"
 #include <stdio.h>
-#ifndef M_PI
-#define M_PI 3.14159265358979323846f
-#endif
-
-__device__ float gaussWeight(float x, float sigma) {
-    return expf(-(x*x) / (2.0f * sigma * sigma)) / (sqrtf(2.0f * M_PI) * sigma);
-}
-
-__global__ void gaussianBlurHorizontalKernel(const uchar4* src,
-                                           uchar4* dst,
-                                           uint32_t width,
-                                           uint32_t height,
-                                           float sigma) {
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-
-    if (x >= width || y >= height) return;
-
-    int radius = ceilf(3.0f * sigma);
-
-    float4 result = make_float4(0.0f, 0.0f, 0.0f, 0.0f);
-    float weightSum = 0.0f;
-
-    for (int dx = -radius; dx <= radius; dx++) {
-        int nx = x + dx;
-        
-        if (nx < 0) nx = -nx;
-        if (nx >= width) nx = 2 * width - nx - 1;
-
-        float weight = gaussWeight(dx, sigma);
-        weightSum += weight;
-        
-        uchar4 pixel = src[y * width + nx];
-        
-        result.x += pixel.x * weight;
-        result.y += pixel.y * weight;
-        result.z += pixel.z * weight;
-        result.w += pixel.w * weight;
-    }
-
-    if (weightSum > 0.0f) {
-        result.x /= weightSum;
-        result.y /= weightSum;
-        result.z /= weightSum;
-        result.w /= weightSum;
-    }
-
-    dst[y * width + x] = make_uchar4(
-        __float2int_rn(result.x),
-        __float2int_rn(result.y),
-        __float2int_rn(result.z),
-        __float2int_rn(result.w)
-    );
-}
-
-__global__ void gaussianBlurVerticalKernel(const uchar4* src,
-                                         uchar4* dst,
-                                         uint32_t width,
-                                         uint32_t height,
-                                         float sigma) {
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-
-    if (x >= width || y >= height) return;
-
-    int radius = ceilf(3.0f * sigma);
-
-    float4 result = make_float4(0.0f, 0.0f, 0.0f, 0.0f);
-    float weightSum = 0.0f;
-
-    for (int dy = -radius; dy <= radius; dy++) {
-        int ny = y + dy;
-        
-        if (ny < 0) ny = -ny;
-        if (ny >= height) ny = 2 * height - ny - 1;
-
-        float weight = gaussWeight(dy, sigma);
-        weightSum += weight;
-        
-        uchar4 pixel = src[ny * width + x];
-        
-        result.x += pixel.x * weight;
-        result.y += pixel.y * weight;
-        result.z += pixel.z * weight;
-        result.w += pixel.w * weight;
-    }
-
-    if (weightSum > 0.0f) {
-        result.x /= weightSum;
-        result.y /= weightSum;
-        result.z /= weightSum;
-        result.w /= weightSum;
-    }
-
-    dst[y * width + x] = make_uchar4(
-        __float2int_rn(result.x),
-        __float2int_rn(result.y),
-        __float2int_rn(result.z),
-        __float2int_rn(result.w)
-    );
-}
 
 __global__ void cropKernel(const uchar4* src,
                            uchar4* dst,
@@ -125,12 +24,13 @@ __global__ void cropKernel(const uchar4* src,
     }
 }
 
-__device__ float calculateShadowWeight(int x, int y,
-                                     const uchar4* buffer,
-                                     uint32_t width,
-                                     uint32_t height,
-                                     float radius,
-                                     bool isInner) {
+__device__ float calculateShadowWeight(int x,
+                                       int y,
+                                       const uchar4* buffer,
+                                       uint32_t width,
+                                       uint32_t height,
+                                       float radius,
+                                       bool isInner) {
     float minDistance = radius;
     int r2 = radius * radius;
     
@@ -156,13 +56,13 @@ __device__ float calculateShadowWeight(int x, int y,
 }
 
 __global__ void shadowKernel(const uchar4* src,
-                           uchar4* dst,
-                           uint32_t width,
-                           uint32_t height,
-                           float radius,
-                           float intensity,
-                           uchar4 shadow_color,
-                           bool isInner) {
+                             uchar4* dst,
+                             uint32_t width,
+                             uint32_t height,
+                             float radius,
+                             float intensity,
+                             uchar4 shadow_color,
+                             bool isInner) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -209,11 +109,11 @@ __device__ float bicubicWeight(float x, float a = -0.5f) {
 }
 
 __global__ void resizeBicubicKernel(uchar4* dst,
-                                   const uchar4* src,
-                                   uint32_t dst_width,
-                                   uint32_t dst_height,
-                                   uint32_t src_width,
-                                   uint32_t src_height) {
+                                    const uchar4* src,
+                                    uint32_t dst_width,
+                                    uint32_t dst_height,
+                                    uint32_t src_width,
+                                    uint32_t src_height) {
     int dst_x = blockIdx.x * blockDim.x + threadIdx.x;
     int dst_y = blockIdx.y * blockDim.y + threadIdx.y;
 
@@ -855,9 +755,9 @@ void apply_stroke(const uchar4* src_buffer,
 }
 
 void apply_opacity(uchar4* buffer,
-                    uint32_t width,
-                    uint32_t height,
-                    float opacity) {
+                   uint32_t width,
+                   uint32_t height,
+                   float opacity) {
     if (!buffer) return;
     
     opacity = min(max(opacity, 0.0f), 1.0f);
@@ -960,56 +860,6 @@ void fill_gradient(uchar4* buffer,
                                             r2, g2, b2, a2,
                                             direction, seamless);
     cudaDeviceSynchronize();
-}
-
-void apply_gaussian_blur_horizontal(const uchar4* src_buffer,
-                                    uchar4* dst_buffer,
-                                    uint32_t width,
-                                    uint32_t height,
-                                    float sigma) {
-    if (!src_buffer || !dst_buffer) return;
-    
-    dim3 block(16, 16);
-    dim3 grid((width + block.x - 1) / block.x,
-                (height + block.y - 1) / block.y);
-    
-    gaussianBlurHorizontalKernel<<<grid, block>>>(
-        src_buffer, dst_buffer,
-        width, height, sigma);
-    
-    cudaDeviceSynchronize();
-}
-
-void apply_gaussian_blur_vertical(const uchar4* src_buffer,
-                                    uchar4* dst_buffer,
-                                    uint32_t width,
-                                    uint32_t height,
-                                    float sigma) {
-    if (!src_buffer || !dst_buffer) return;
-    
-    dim3 block(16, 16);
-    dim3 grid((width + block.x - 1) / block.x,
-                (height + block.y - 1) / block.y);
-    
-    gaussianBlurVerticalKernel<<<grid, block>>>(
-        src_buffer, dst_buffer,
-        width, height, sigma);
-    
-    cudaDeviceSynchronize();
-}
-
-__declspec(dllexport) void apply_gaussian_blur(const uchar4* src_buffer,
-                                                uchar4* temp_buffer,
-                                                uchar4* dst_buffer,
-                                                uint32_t width,
-                                                uint32_t height,
-                                                float radius) {
-    if (!src_buffer || !temp_buffer || !dst_buffer) return;
-    
-    float sigma = radius / 2.0f;
-
-    apply_gaussian_blur_horizontal(src_buffer, temp_buffer, width, height, sigma);
-    apply_gaussian_blur_vertical(temp_buffer, dst_buffer, width, height, sigma);
 }
 
 }
