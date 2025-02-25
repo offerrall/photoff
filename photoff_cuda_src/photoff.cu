@@ -29,10 +29,10 @@ __device__ float gaussianWeight(float distance, float sigma) {
 }
 
 __global__ void gaussianBlurKernel(const uchar4* src,
-                                  uchar4* dst,
-                                  uint32_t width,
-                                  uint32_t height,
-                                  float radius) {
+                                   uchar4* dst,
+                                   uint32_t width,
+                                   uint32_t height,
+                                   float radius) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -86,7 +86,10 @@ __global__ void gaussianBlurKernel(const uchar4* src,
     }
 }
 
-__global__ void copyBufferKernel(uchar4* dst, const uchar4* src, uint32_t width, uint32_t height) {
+__global__ void copyBufferKernel(uchar4* dst,
+                                 const uchar4* src,
+                                 uint32_t width,
+                                 uint32_t height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
     
@@ -520,9 +523,9 @@ __global__ void innerStrokeKernel(const uchar4* src,
 
 
 __global__ void applyOpacityKernel(uchar4* buffer, 
-                                  uint32_t width, 
-                                  uint32_t height,
-                                  float opacity) {
+                                   uint32_t width, 
+                                   uint32_t height,
+                                   float opacity) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
