@@ -24,6 +24,30 @@ __global__ void cropKernel(const uchar4* src,
     }
 }
 
+__global__ void grayscaleKernel(uchar4* buffer,
+                               uint32_t width,
+                               uint32_t height) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    int idx = y * width + x;
+    uchar4 pixel = buffer[idx];
+    
+    if (pixel.w == 0) return;
+    
+    unsigned char gray = (unsigned char)(
+        0.299f * pixel.x + 
+        0.587f * pixel.y + 
+        0.114f * pixel.z
+    );
+    
+    buffer[idx].x = gray;
+    buffer[idx].y = gray;
+    buffer[idx].z = gray;
+}
+
 __device__ float gaussianWeight(float distance, float sigma) {
     return expf(-(distance * distance) / (2.0f * sigma * sigma));
 }
@@ -885,6 +909,20 @@ void apply_flip(uchar4* buffer,
               
     flipKernel<<<grid, block>>>(buffer, width, height,
                                flip_horizontal, flip_vertical);
+    
+    cudaDeviceSynchronize();
+}
+
+void apply_grayscale(uchar4* buffer,
+                    uint32_t width,
+                    uint32_t height) {
+    if (!buffer) return;
+    
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+              (height + block.y - 1) / block.y);
+              
+    grayscaleKernel<<<grid, block>>>(buffer, width, height);
     
     cudaDeviceSynchronize();
 }
