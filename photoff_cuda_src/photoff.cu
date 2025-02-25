@@ -568,28 +568,6 @@ void free_buffer(uchar4* buffer) {
     cudaDeviceSynchronize();
 }
 
-uchar4* copy_buffer(const uchar4* src_buffer,
-                    uint32_t width,
-                    uint32_t height) {
-    if (!src_buffer) return nullptr;
-
-    uchar4* dst_buffer = create_buffer(width, height);
-    if (!dst_buffer) return nullptr;
-
-    cudaError_t err = cudaMemcpy(dst_buffer, src_buffer, 
-                                width * height * sizeof(uchar4),
-                                cudaMemcpyDeviceToDevice);
-    
-    if (err != cudaSuccess) {
-        printf("Error in cudaMemcpy: %s\n", cudaGetErrorString(err));
-        free_buffer(dst_buffer);
-        return nullptr;
-    }
-
-    cudaDeviceSynchronize();
-    return dst_buffer;
-}
-
 void copy_to_device(uchar4* d_dst,
                     const uchar4* h_src,
                     uint32_t width,

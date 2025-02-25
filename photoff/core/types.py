@@ -31,9 +31,3 @@ class CudaImage:
             return
         free_buffer(self.buffer)
         self.buffer = None
-    
-    def copy(self):
-        copy_b = copy_buffer(self.buffer, self.width, self.height)
-        copy = CudaImage(self.width, self.height, auto_init=False)
-        copy.buffer = copy_b
-        return copy

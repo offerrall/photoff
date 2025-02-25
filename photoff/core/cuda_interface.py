@@ -10,10 +10,6 @@ ffi.cdef("""
 
     void free_buffer(uchar4* buffer);
 
-    uchar4* copy_buffer(const uchar4* src_buffer,
-                        uint32_t width,
-                        uint32_t height);
-
     void copy_to_device(uchar4* d_dst,
                         const uchar4* h_src,
                         uint32_t width,
