@@ -67,9 +67,11 @@ def apply_flip(image: CudaImage,
                flip_horizontal: bool = False,
                flip_vertical: bool = False) -> None:
 
+    if flip_horizontal and flip_vertical:
+        raise ValueError("Cannot flip both horizontal and vertical at the same time")
+
     _lib.apply_flip(image.buffer,
                     image.width,
                     image.height,
                     flip_horizontal,
                     flip_vertical)
-
