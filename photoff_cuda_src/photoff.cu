@@ -704,8 +704,8 @@ void apply_corner_radius(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_stroke(uchar4* src_buffer,
-                  const uchar4* copy_src_buffer,
+void apply_stroke(uchar4* buffer,
+                  const uchar4* copy_buffer,
                   uint32_t width,
                   uint32_t height,
                   int stroke_width,
@@ -721,10 +721,10 @@ void apply_stroke(uchar4* src_buffer,
               (height + block.y - 1) / block.y);
     
     if (mode == 0) {
-        strokeKernel<<<grid, block>>>(copy_src_buffer, src_buffer, width, height,
+        strokeKernel<<<grid, block>>>(copy_buffer, buffer, width, height,
                                         stroke_width, stroke_color);
     } else if (mode == 1) {
-        innerStrokeKernel<<<grid, block>>>(copy_src_buffer, src_buffer, width, height,
+        innerStrokeKernel<<<grid, block>>>(copy_buffer, buffer, width, height,
                                              stroke_width, stroke_color);
     }
     
@@ -748,8 +748,8 @@ void apply_opacity(uchar4* buffer,
     cudaDeviceSynchronize();
 }
 
-void apply_shadow(uchar4* src_buffer,
-                  const uchar4* copy_src_buffer,
+void apply_shadow(uchar4* buffer,
+                  const uchar4* copy_buffer,
                   uint32_t width,
                   uint32_t height,
                   float radius,
@@ -766,7 +766,7 @@ void apply_shadow(uchar4* src_buffer,
     uchar4 shadow_color = make_uchar4(shadow_r, shadow_g, shadow_b, shadow_a);
     bool isInner = mode == 1;
     
-    shadowKernel<<<grid, block>>>(copy_src_buffer, src_buffer,
+    shadowKernel<<<grid, block>>>(copy_buffer, buffer,
                                   width, height,
                                   radius, intensity,
                                   shadow_color, isInner);

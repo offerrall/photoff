@@ -67,33 +67,12 @@ __declspec(dllexport) void fill_gradient(uchar4* buffer,
 
 // Filters -------------------------------------------------------------------
 
+
+// No copy needed
 __declspec(dllexport) void apply_corner_radius(uchar4* buffer,
                                                uint32_t width,
                                                uint32_t height,
                                                uint32_t size);
-
-__declspec(dllexport) void apply_stroke(uchar4* src_buffer,
-                                        const uchar4* copy_src_buffer,
-                                        uint32_t width,
-                                        uint32_t height,
-                                        int stroke_width,
-                                        unsigned char stroke_r,
-                                        unsigned char stroke_g,
-                                        unsigned char stroke_b,
-                                        unsigned char stroke_a,
-                                        int mode);
-
-__declspec(dllexport) void apply_shadow(uchar4* src_buffer,
-                                        const uchar4* copy_src_buffer,
-                                        uint32_t width,
-                                        uint32_t height,
-                                        float radius,
-                                        float intensity,
-                                        unsigned char shadow_r,
-                                        unsigned char shadow_g,
-                                        unsigned char shadow_b,
-                                        unsigned char shadow_a,
-                                        int mode);
 
 __declspec(dllexport) void apply_opacity(uchar4* buffer,
                                          uint32_t width,
@@ -105,6 +84,30 @@ __declspec(dllexport) void apply_flip(uchar4* buffer,
                                       uint32_t height,
                                       bool flip_horizontal,
                                       bool flip_vertical);
+
+// Copy needed
+__declspec(dllexport) void apply_stroke(uchar4* buffer,
+                                        const uchar4* copy_buffer,
+                                        uint32_t width,
+                                        uint32_t height,
+                                        int stroke_width,
+                                        unsigned char stroke_r,
+                                        unsigned char stroke_g,
+                                        unsigned char stroke_b,
+                                        unsigned char stroke_a,
+                                        int mode);
+
+__declspec(dllexport) void apply_shadow(uchar4* buffer,
+                                        const uchar4* copy_buffer,
+                                        uint32_t width,
+                                        uint32_t height,
+                                        float radius,
+                                        float intensity,
+                                        unsigned char shadow_r,
+                                        unsigned char shadow_g,
+                                        unsigned char shadow_b,
+                                        unsigned char shadow_a,
+                                        int mode);
 
 // ---------------------------------------------------------------------------
 
