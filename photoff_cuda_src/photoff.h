@@ -110,6 +110,12 @@ __declspec(dllexport) void apply_flip(uchar4* buffer,
                                       bool flip_horizontal,
                                       bool flip_vertical);
 
+__declspec(dllexport) void apply_gaussian_blur(const uchar4* src_buffer,
+                                               uchar4* temp_buffer,
+                                               uchar4* dst_buffer,
+                                               uint32_t width,
+                                               uint32_t height,
+                                               float radius);
 
 // ---------------------------------------------------------------------------
 
