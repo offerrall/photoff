@@ -58,7 +58,7 @@ ffi.cdef("""
                     uint32_t width, uint32_t height,
                     bool flip_horizontal, bool flip_vertical);
 
-    // Filtros que requieren copia del buffer original
+
     void apply_stroke(uchar4* buffer, const uchar4* copy_buffer,
                       uint32_t width, uint32_t height,
                       int stroke_width,
@@ -72,6 +72,10 @@ ffi.cdef("""
                       unsigned char shadow_r, unsigned char shadow_g,
                       unsigned char shadow_b, unsigned char shadow_a,
                       int mode);
+
+    void gaussian_blur(uchar4* buffer, const uchar4* copy_buffer,
+                       uint32_t width, uint32_t height,
+                       float radius);         
 
     // Resize / Crop
     void resize_bilinear(uchar4* dst, const uchar4* src,

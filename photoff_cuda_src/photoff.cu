@@ -24,6 +24,68 @@ __global__ void cropKernel(const uchar4* src,
     }
 }
 
+__device__ float gaussianWeight(float distance, float sigma) {
+    return expf(-(distance * distance) / (2.0f * sigma * sigma));
+}
+
+__global__ void gaussianBlurKernel(const uchar4* src,
+                                  uchar4* dst,
+                                  uint32_t width,
+                                  uint32_t height,
+                                  float radius) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= width || y >= height) return;
+    
+    float sigma = radius / 2.0f;
+    
+    int kernelSize = ceilf(radius * 3.0f);
+    kernelSize = max(1, min(kernelSize, 25));
+    
+    float sumR = 0.0f, sumG = 0.0f, sumB = 0.0f, sumA = 0.0f;
+    float totalWeight = 0.0f;
+    
+    for (int ky = -kernelSize; ky <= kernelSize; ky++) {
+        for (int kx = -kernelSize; kx <= kernelSize; kx++) {
+            int sampleX = min(width - 1, max(0, x + kx));
+            int sampleY = min(height - 1, max(0, y + ky));
+            
+            float distance = sqrtf((float)(kx * kx + ky * ky));
+            
+            if (distance > kernelSize) continue;
+            
+            float weight = gaussianWeight(distance, sigma);
+            
+            uchar4 sample = src[sampleY * width + sampleX];
+            
+            float alpha = sample.w / 255.0f;
+            
+            sumR += sample.x * weight * alpha;
+            sumG += sample.y * weight * alpha;
+            sumB += sample.z * weight * alpha;
+            sumA += sample.w * weight;
+            
+            totalWeight += weight;
+        }
+    }
+    
+    if (totalWeight > 0.0f) {
+        float alpha = sumA / (totalWeight * 255.0f);
+        
+        if (alpha > 0.0f) {
+            dst[y * width + x].x = (unsigned char)(sumR / (totalWeight * alpha));
+            dst[y * width + x].y = (unsigned char)(sumG / (totalWeight * alpha));
+            dst[y * width + x].z = (unsigned char)(sumB / (totalWeight * alpha));
+            dst[y * width + x].w = (unsigned char)(sumA / totalWeight);
+        } else {
+            dst[y * width + x] = make_uchar4(0, 0, 0, 0);
+        }
+    } else {
+        dst[y * width + x] = make_uchar4(0, 0, 0, 0);
+    }
+}
+
 __global__ void copyBufferKernel(uchar4* dst, const uchar4* src, uint32_t width, uint32_t height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
@@ -868,6 +930,21 @@ void fill_gradient(uchar4* buffer,
                                             r1, g1, b1, a1,
                                             r2, g2, b2, a2,
                                             direction, seamless);
+    cudaDeviceSynchronize();
+}
+
+void gaussian_blur(uchar4* buffer,
+                   const uchar4* copy_buffer,
+                   uint32_t width,
+                   uint32_t height,
+                   float radius) {
+    
+    dim3 block(16, 16);
+    dim3 grid((width + block.x - 1) / block.x,
+              (height + block.y - 1) / block.y);
+    
+    gaussianBlurKernel<<<grid, block>>>(copy_buffer, buffer, width, height, radius);
+    
     cudaDeviceSynchronize();
 }
 

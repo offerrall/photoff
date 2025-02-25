@@ -114,6 +114,12 @@ __declspec(dllexport) void apply_shadow(uchar4* buffer,
                                         unsigned char shadow_a,
                                         int mode);
 
+__declspec(dllexport) void gaussian_blur(uchar4* buffer,
+                                         const uchar4* copy_buffer,
+                                         uint32_t width,
+                                         uint32_t height,
+                                         float radius);
+
 // ---------------------------------------------------------------------------
 
 // Resize --------------------------------------------------------------------
