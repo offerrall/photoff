@@ -18,3 +18,6 @@ def copy_to_host(h_dst: 'CudaBuffer', d_src: 'CudaBuffer', width: int, height: i
 
 def copy_to_device(d_dst: 'CudaBuffer', h_src: 'CudaBuffer', width: int, height: int) -> None:
     _lib.copy_to_device(d_dst, h_src, width, height)
+
+def copy_buffers_same_size(dst: 'CudaBuffer', src: 'CudaBuffer', width: int, height: int) -> None:
+    _lib.copy_buffers_same_size(dst, src, width, height)

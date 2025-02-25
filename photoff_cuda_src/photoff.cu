@@ -568,6 +568,15 @@ void free_buffer(uchar4* buffer) {
     cudaDeviceSynchronize();
 }
 
+void copy_buffers_same_size(uchar4* dst,
+                            const uchar4* src,
+                            uint32_t width,
+                            uint32_t height) {
+    size_t size = width * height * sizeof(uchar4);
+    cudaMemcpy(dst, src, size, cudaMemcpyDeviceToDevice);
+    cudaDeviceSynchronize();
+}
+
 void copy_to_device(uchar4* d_dst,
                     const uchar4* h_src,
                     uint32_t width,

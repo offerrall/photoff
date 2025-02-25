@@ -8,6 +8,11 @@ extern "C" {
 __declspec(dllexport) uchar4* create_buffer(uint32_t width,
                                             uint32_t height);
 
+__declspec(dllexport) void copy_buffers_same_size(uchar4* dst,
+                                                  const uchar4* src,
+                                                  uint32_t width,
+                                                  uint32_t height);
+
 __declspec(dllexport) void free_buffer(uchar4* buffer);
 
 // ---------------------------------------------------------------------------

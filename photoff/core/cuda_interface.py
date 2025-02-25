@@ -16,6 +16,11 @@ ffi.cdef("""
     uchar4* create_buffer(uint32_t width, uint32_t height);
     void free_buffer(uchar4* buffer);
 
+    void copy_buffers_same_size(uchar4* dst,
+                                const uchar4* src,
+                                uint32_t width,
+                                uint32_t height);
+         
     // Host - Device Memory Transfer
     void copy_to_host(uchar4* h_dst, const uchar4* d_src, uint32_t width, uint32_t height);
     void copy_to_device(uchar4* d_dst, const uchar4* h_src, uint32_t width, uint32_t height);
