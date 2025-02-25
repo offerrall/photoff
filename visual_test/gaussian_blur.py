@@ -6,11 +6,13 @@ from typing import Annotated
 from functogui import App, imageFileReturn, intUi, floatUi, fileUi
 
 def gaussian_blur_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
-                     radius: Annotated[float, floatUi(min_value=0.1, max_value=50.0)] = 5.0
+                     radius: Annotated[float, floatUi(min_value=0, max_value=50.0)] = 5.0
                      ) -> Annotated[str, imageFileReturn]:
 
     path = "./assets/gaussian_blur_test.png"
     src_image = load_image(image)
+    if radius == 0:
+        radius = 0.1
 
     aux_buffer = CudaImage(src_image.width, src_image.height)
     apply_gaussian_blur(src_image, radius)
