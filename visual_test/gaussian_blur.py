@@ -1,9 +1,8 @@
-from photoff.operations.fill import fill_color
 from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
 from photoff.io import save_image, load_image
 from photoff import CudaImage
 from typing import Annotated
-from functogui import App, imageFileReturn, intUi, floatUi, fileUi
+from functogui import App, imageFileReturn, floatUi, fileUi
 
 def gaussian_blur_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
                      radius: Annotated[float, floatUi(min_value=0, max_value=50.0)] = 5.0
@@ -16,6 +15,7 @@ def gaussian_blur_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
 
     aux_buffer = CudaImage(src_image.width, src_image.height)
     apply_gaussian_blur(src_image, radius)
+    apply_corner_radius(src_image, 200)
     save_image(src_image, path)
     
     src_image.free()
