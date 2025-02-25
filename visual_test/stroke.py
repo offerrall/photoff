@@ -13,7 +13,6 @@ def stroke_ui(
 ) -> Annotated[str, imageFileReturn]:
     path = "./assets/stroke_test.png"
     src_image = load_image(image)
-    src_image_copy = load_image(image)
     
     apply_stroke(src_image, stroke_width, RGBA(*stroke_color), image_copy_cache=None, inner=inner)
     
