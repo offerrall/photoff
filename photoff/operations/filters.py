@@ -23,11 +23,16 @@ def apply_flip(image: CudaImage,
                     flip_horizontal,
                     flip_vertical)
 
+def apply_grayscale(image: CudaImage) -> None:
+
+    _lib.apply_grayscale(image.buffer, image.width, image.height)
+
 def apply_stroke(image: CudaImage,
                  stroke_width: int,
                  stroke_color: RGBA,
                  image_copy_cache: CudaImage = None,
                  inner: bool = False) -> None:
+    
     need_free = False
     if image_copy_cache is None:
         image_copy_cache = CudaImage(image.width, image.height)

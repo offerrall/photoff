@@ -58,7 +58,9 @@ ffi.cdef("""
                     uint32_t width, uint32_t height,
                     bool flip_horizontal, bool flip_vertical);
 
-
+    void apply_grayscale(uchar4* buffer,
+                         uint32_t width, uint32_t height);
+         
     void apply_stroke(uchar4* buffer, const uchar4* copy_buffer,
                       uint32_t width, uint32_t height,
                       int stroke_width,
