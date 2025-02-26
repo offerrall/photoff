@@ -5,13 +5,12 @@ from photoff import RGBA
 from typing import Annotated
 from functogui import App, imageFileReturn, fileUi, intUi
 
-def cover_container_ui(
-    image: Annotated[str, fileUi] = "./assets/stock.jpg",
-    container_width: Annotated[int, intUi(min_value=1, max_value=3000)] = 800,
-    container_height: Annotated[int, intUi(min_value=1, max_value=3000)] = 600,
-    offset_x: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0,
-    offset_y: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0
-) -> Annotated[str, imageFileReturn]:
+def cover_container_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
+                       container_width: Annotated[int, intUi(min_value=1, max_value=3000)] = 800,
+                       container_height: Annotated[int, intUi(min_value=1, max_value=3000)] = 600,
+                       offset_x: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0,
+                       offset_y: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0
+                       ) -> Annotated[str, imageFileReturn]:
     path = "./assets/cover_container_test.png"
     
     src_image = load_image(image)
