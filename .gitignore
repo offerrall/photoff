@@ -5,8 +5,9 @@ __pycache__/
 
 # C extensions
 *.so
-# assets folder
-assets/
+
+# .dll file
+*.dll
 
 # Distribution / packaging
 .Python
