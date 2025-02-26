@@ -4,15 +4,17 @@ from ..core.types import CudaImage
 from PIL import Image
 import numpy as np
 
-
-def save_image(image: CudaImage,
-               filename: str) -> None:
-
+def image_to_pil(image: CudaImage) -> Image:
     img_data = bytearray(image.width * image.height * 4)
     data_ptr = ffi.from_buffer(img_data)
     copy_to_host(ffi.cast("uchar4*", data_ptr), image.buffer, image.width, image.height)
-    img = Image.frombytes("RGBA", (image.width, image.height), bytes(img_data))
+    return Image.frombytes("RGBA", (image.width, image.height), bytes(img_data))
+
+def save_image(image: CudaImage,
+               filename: str) -> None:
+    img = image_to_pil(image)
     img.save(filename)
+    img.close()
 
 def load_image(filename: str,
                container: CudaImage = None) -> CudaImage:
