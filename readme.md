@@ -98,7 +98,7 @@ cover_resize_cache.free()
 ## Installation
 1. **Clone Repository**
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/offerrall/photoff/
    cd photoff
    ```
 2. **Install Python Dependencies**
