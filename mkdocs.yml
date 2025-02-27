@@ -1,0 +1,25 @@
+site_name: Mi Documentación
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: '__span'
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+  - Inicio: index.md
+  - Guía de usuario:
+    - Instalación: user-guide/installation.md
+    - Primeros pasos: user-guide/getting-started.md
+  - Referencia API: api.md
