@@ -1,6 +1,5 @@
 from photoff.operations.resize import crop_margins
 from photoff.io import save_image, load_image
-from photoff import CudaImage
 from typing import Annotated
 from functogui import App, imageFileReturn, intUi, fileUi
 

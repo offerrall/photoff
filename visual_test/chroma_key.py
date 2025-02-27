@@ -7,14 +7,13 @@ from photoff import RGBA, CudaImage
 from typing import Annotated
 from functogui import App, imageFileReturn, intUi, listUi
 
-def chroma_key_ui(
-                key_color: tuple[int, int, int, int] = (0, 255, 0, 255),  # Verde por defecto
-                corner_radius: Annotated[int, intUi(min_value=0, max_value=200)] = 50,
-                channel: Annotated[str, listUi(values=["R", "G", "B", "A"])] = "G",
-                threshold: Annotated[int, intUi(min_value=0, max_value=255)] = 128,
-                invert: bool = False,
-                zero_all_channels: bool = False
-    ) -> Annotated[str, imageFileReturn]:
+def chroma_key_ui(key_color: tuple[int, int, int, int] = (0, 255, 0, 255),
+                  corner_radius: Annotated[int, intUi(min_value=0, max_value=200)] = 50,
+                  channel: Annotated[str, listUi(values=["R", "G", "B", "A"])] = "G",
+                  threshold: Annotated[int, intUi(min_value=0, max_value=255)] = 128,
+                  invert: bool = False,
+                  zero_all_channels: bool = False
+                  ) -> Annotated[str, imageFileReturn]:
     
     path = "./assets/chroma_key_test.png"
     
