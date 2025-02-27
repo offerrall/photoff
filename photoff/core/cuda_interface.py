@@ -60,7 +60,18 @@ ffi.cdef("""
 
     void apply_grayscale(uchar4* buffer,
                          uint32_t width, uint32_t height);
-         
+
+    void apply_chroma_key(uchar4* buffer,
+                        const uchar4* key_buffer,
+                        uint32_t buffer_width,
+                        uint32_t buffer_height,
+                        uint32_t key_width,
+                        uint32_t key_height,
+                        int channel,
+                        unsigned char threshold,
+                        bool invert,
+                        bool zero_all_channels);
+    
     void apply_stroke(uchar4* buffer, const uchar4* copy_buffer,
                       uint32_t width, uint32_t height,
                       int stroke_width,

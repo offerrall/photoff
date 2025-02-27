@@ -27,6 +27,38 @@ def apply_grayscale(image: CudaImage) -> None:
 
     _lib.apply_grayscale(image.buffer, image.width, image.height)
 
+def apply_chroma_key(image: CudaImage,
+                     key_image: CudaImage,
+                     channel: str = 'A',
+                     threshold: int = 128,
+                     invert: bool = False,
+                     zero_all_channels: bool = False) -> None:
+
+    channel_upper = channel.upper() if isinstance(channel, str) else str(channel).upper()
+    
+    if channel_upper == 'R':
+        channel_idx = 0
+    elif channel_upper == 'G':
+        channel_idx = 1
+    elif channel_upper == 'B':
+        channel_idx = 2
+    elif channel_upper == 'A':
+        channel_idx = 3
+    else:
+        raise ValueError(f"Invalid channel: {channel}, must be one of 'R', 'G', 'B', 'A'")
+    
+    _lib.apply_chroma_key(image.buffer,
+                          key_image.buffer,
+                          image.width,
+                          image.height,
+                          key_image.width,
+                          key_image.height,
+                          channel_idx,
+                          threshold,
+                          invert,
+                          zero_all_channels
+    )
+
 def apply_stroke(image: CudaImage,
                  stroke_width: int,
                  stroke_color: RGBA,

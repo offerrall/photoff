@@ -24,6 +24,51 @@ __global__ void cropKernel(const uchar4* src,
     }
 }
 
+__global__ void chromaKeyKernel(uchar4* buffer,
+                                const uchar4* key_buffer,
+                                uint32_t buffer_width,
+                                uint32_t buffer_height,
+                                uint32_t key_width,
+                                uint32_t key_height,
+                                int channel,
+                                unsigned char threshold,
+                                bool invert,
+                                bool zero_all_channels) {
+    int x = blockIdx.x * blockDim.x + threadIdx.x;
+    int y = blockIdx.y * blockDim.y + threadIdx.y;
+    
+    if (x >= buffer_width || y >= buffer_height) return;
+    
+    int buffer_idx = y * buffer_width + x;
+    
+    if (x < key_width && y < key_height) {
+        int key_idx = y * key_width + x;
+        uchar4 keyPixel = key_buffer[key_idx];
+        
+        unsigned char channelValue;
+        switch(channel) {
+            case 0: channelValue = keyPixel.x; break; // R
+            case 1: channelValue = keyPixel.y; break; // G
+            case 2: channelValue = keyPixel.z; break; // B
+            case 3: channelValue = keyPixel.w; break; // A
+            default: channelValue = keyPixel.y; break; // Default to G
+        }
+        
+        bool makeTransparent = invert ? 
+                              (channelValue <= threshold) : 
+                              (channelValue > threshold);
+        
+        if (makeTransparent) {
+            if (zero_all_channels) {
+                buffer[buffer_idx] = make_uchar4(0, 0, 0, 0); // Poner todo el píxel a 0
+            } else {
+                buffer[buffer_idx].w = 0; // Solo modificar alfa, manteniendo RGB intacto
+            }
+        }
+    }
+}
+
+
 __global__ void grayscaleKernel(uchar4* buffer,
                                uint32_t width,
                                uint32_t height) {
@@ -985,6 +1030,31 @@ void apply_gaussian_blur(uchar4* buffer,
               (height + block.y - 1) / block.y);
     
     gaussianBlurKernel<<<grid, block>>>(copy_buffer, buffer, width, height, radius);
+    
+    cudaDeviceSynchronize();
+}
+
+void apply_chroma_key(uchar4* buffer,
+                    const uchar4* key_buffer,
+                    uint32_t buffer_width,
+                    uint32_t buffer_height,
+                    uint32_t key_width,
+                    uint32_t key_height,
+                    int channel,
+                    unsigned char threshold,
+                    bool invert,
+                    bool zero_all_channels) {
+    if (!buffer || !key_buffer) return;
+    
+    dim3 block(16, 16);
+    dim3 grid((buffer_width + block.x - 1) / block.x,
+              (buffer_height + block.y - 1) / block.y);
+              
+    chromaKeyKernel<<<grid, block>>>(buffer, key_buffer, 
+                                     buffer_width, buffer_height, 
+                                     key_width, key_height, 
+                                     channel, threshold, invert,
+                                     zero_all_channels);
     
     cudaDeviceSynchronize();
 }
