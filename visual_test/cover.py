@@ -11,6 +11,7 @@ def cover_container_ui(image: Annotated[str, fileUi] = "./assets/stock.jpg",
                        offset_x: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0,
                        offset_y: Annotated[int, intUi(min_value=-1000, max_value=1000)] = 0
                        ) -> Annotated[str, imageFileReturn]:
+    
     path = "./assets/cover_container_test.png"
     
     src_image = load_image(image)

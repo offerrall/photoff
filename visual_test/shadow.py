@@ -10,6 +10,7 @@ def shadow_ui(image: Annotated[str, fileUi] = "./assets/logo.png",
               intensity: Annotated[float, floatUi(min_value=0.1, max_value=1.0)] = 0.5,
               shadow_color: tuple[int, int, int, int] = (0, 0, 0, 128),
               inner: bool = False) -> Annotated[str, imageFileReturn]:
+    
     path = "./assets/shadow_test.png"
     src_image = load_image(image)
     
