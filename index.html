@@ -235,15 +235,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Features
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Example
@@ -253,42 +244,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#memory-management-performance" class="md-nav__link">
+  <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
-      Memory Management &amp; Performance
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Memory Management & Performance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#buffer-reuse-memory-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      Buffer Reuse &amp; Memory Control
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Requirements
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Navigation
+      Key Features
     </span>
   </a>
   
@@ -437,15 +395,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#key-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Key Features
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#basic-example" class="md-nav__link">
     <span class="md-ellipsis">
       Basic Example
@@ -455,42 +404,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#memory-management-performance" class="md-nav__link">
+  <a href="#key-features" class="md-nav__link">
     <span class="md-ellipsis">
-      Memory Management &amp; Performance
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Memory Management & Performance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#buffer-reuse-memory-control" class="md-nav__link">
-    <span class="md-ellipsis">
-      Buffer Reuse &amp; Memory Control
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      Requirements
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-navigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Navigation
+      Key Features
     </span>
   </a>
   
@@ -513,12 +429,31 @@
 
 
 <h1 id="photoff-high-performance-image-processing-library-with-cuda">PhotoFF - High-Performance Image Processing Library with CUDA</h1>
+<p>PhotoFF is a high-performance image processing library that uses CUDA to achieve exceptional processing speeds. Designed to maximize performance through efficient GPU memory management.</p>
+<h2 id="basic-example">Basic Example</h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">photoff.operations.filters</span> <span class="kn">import</span> <span class="n">apply_gaussian_blur</span><span class="p">,</span> <span class="n">apply_corner_radius</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">photoff.io</span> <span class="kn">import</span> <span class="n">save_image</span><span class="p">,</span> <span class="n">load_image</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">photoff</span> <span class="kn">import</span> <span class="n">CudaImage</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Load the image</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">src_image</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;./assets/stock.jpg&quot;</span><span class="p">)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Apply filters</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">apply_gaussian_blur</span><span class="p">(</span><span class="n">src_image</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">apply_corner_radius</span><span class="p">(</span><span class="n">src_image</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Save the result</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">save_image</span><span class="p">(</span><span class="n">src_image</span><span class="p">,</span> <span class="s2">&quot;./assets/gaussian_blur_test.png&quot;</span><span class="p">)</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Free resources</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="n">src_image</span><span class="o">.</span><span class="n">free</span><span class="p">()</span>
+</span></code></pre></div>
+<p><img alt="Gaussian Blur Test" src="/assets/gaussian_blur_test.png" /></p>
+<h2 id="key-features">Key Features</h2>
 <div class="admonition warning">
 <p class="admonition-title">Development Status</p>
-<p><strong>This library is currently under active development.</strong> The API may change significantly between versions. Use at your own risk in production environments.</p>
+<p><strong>This only the beginning!</strong> More features are coming soon.</p>
 </div>
-<p>PhotoFF is a high-performance image processing library that uses CUDA to achieve exceptional processing speeds. Designed to maximize performance through efficient GPU memory management.</p>
-<h2 id="key-features">Key Features</h2>
 <ul>
 <li><strong>Image blending</strong>: Combine multiple images with different blending modes.</li>
 <li><strong>Fill operations</strong>: Fill an image with a solid color or a gradient.</li>
@@ -528,52 +463,6 @@
 <li><strong>Text rendering</strong>: Render text onto images.</li>
 <li><strong>Utility functions</strong>: Calculate padding and compose images to cover containers.</li>
 <li><strong>I/O operations</strong>: Load images from files, save images, and convert CUDA images to PIL images.</li>
-</ul>
-<h2 id="basic-example">Basic Example</h2>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span> <span class="nn">photoff.operations.filters</span> <span class="kn">import</span> <span class="n">apply_shadow</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">photoff.io</span> <span class="kn">import</span> <span class="n">load_image</span><span class="p">,</span> <span class="n">save_image</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">photoff</span> <span class="kn">import</span> <span class="n">RGBA</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Load image</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">image</span> <span class="o">=</span> <span class="n">load_image</span><span class="p">(</span><span class="s2">&quot;./assets/image.png&quot;</span><span class="p">)</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Apply shadow effect</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">apply_shadow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">intensity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">shadow_color</span><span class="o">=</span><span class="n">RGBA</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">inner</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Save image</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">save_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="s2">&quot;./assets/image_with_shadow.png&quot;</span><span class="p">)</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Free GPU memory</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="n">image</span><span class="o">.</span><span class="n">free</span><span class="p">()</span>
-</span></code></pre></div>
-<h2 id="memory-management-performance">Memory Management &amp; Performance</h2>
-<p>PhotoFF has been designed with a focus on maximum performance through efficient GPU memory management. The library achieves exceptional processing speeds (up to 30,000 FPS for fill operations at 1920p on an RTX 3070) by implementing several key optimization strategies:</p>
-<h3 id="buffer-reuse-memory-control">Buffer Reuse &amp; Memory Control</h3>
-<p>Unlike many image processing libraries that allocate and free memory for each operation, PhotoFF gives you complete control over buffer allocation and reuse. Key benefits include:</p>
-<ul>
-<li><strong>Explicit Buffer Management</strong>: Create buffers once and reuse them across multiple operations to eliminate allocation overhead.</li>
-<li><strong>Processing Pipelines</strong>: Chain multiple effects with zero intermediate allocations.</li>
-<li><strong>Size Flexibility</strong>: Buffers can be larger than strictly needed for a given operation, allowing pre-allocation of maximum-size buffers that can be reused for smaller operations.</li>
-</ul>
-<h2 id="requirements">Requirements</h2>
-<ul>
-<li>NVIDIA GPU with CUDA support</li>
-<li>CUDA Toolkit (ensure <code>nvcc</code> is in PATH)</li>
-<li>Python 3.9+</li>
-<li>Visual Studio (Windows) for compiling the DLL</li>
-<li>Python dependencies: NumPy, Pillow, CFFI<ul>
-<li>Numpy is only for loading/saving images and is not required for core operations</li>
-<li>Pillow is required for loading/saving images and text rendering</li>
-<li>CFFI is required for interfacing with the CUDA DLL</li>
-</ul>
-</li>
-</ul>
-<h2 id="quick-navigation">Quick Navigation</h2>
-<ul>
-<li><a href="user-guide/installation.md">Installation Guide</a></li>
-<li><a href="user-guide/getting-started.md">Getting Started</a></li>
-<li><a href="api/core/cuda-image.md">API Reference</a></li>
-<li><a href="advanced/performance.md">Performance</a></li>
 </ul>
 
 
