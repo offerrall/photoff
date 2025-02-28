@@ -7,7 +7,7 @@ PhotoFF is a high-performance image processing library that uses CUDA to achieve
 ```python
 from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
 from photoff.io import save_image, load_image
-from photoff import CudaImage
+from photoff import Image
 
 # Load the image
 src_image = load_image("./assets/stock.jpg")
@@ -23,19 +23,12 @@ save_image(src_image, "./assets/gaussian_blur_test.png")
 src_image.free()
 ```
 
-![Gaussian Blur Test](/assets/gaussian_blur_test.png)
+![Gaussian Blur Test](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/gaussian_blur_test.png)
 
 ## Key Features
 
-!!! warning "Development Status"
-    **This only the beginning!** More features are coming soon.
-
-- **Image blending**: Combine multiple images with different blending modes.
-- **Fill operations**: Fill an image with a solid color or a gradient.
-- **Filter effects**: Apply various effects like rounded corners, opacity adjustment, flipping, grayscale conversion, stroke, shadow, and Gaussian blur.
-- **Resizing**: Resize images using bilinear, nearest, or bicubic interpolation.
-- **Cropping**: Remove margins from images.
-- **Text rendering**: Render text onto images.
-- **Utility functions**: Calculate padding and compose images to cover containers.
-- **I/O operations**: Load images from files, save images, and convert CUDA images to PIL images.
-
+- **CUDA-Accelerated Processing**: Harness the power of your GPU for blazing-fast image operations
+- **Memory-Efficient Design**: Optimized buffer management minimizes memory overhead
+- **Robust Image Manipulation**: Comprehensive suite of operations including filters, transforms, and compositing
+- **Pythonic Interface**: Clean, intuitive API designed for both beginners and advanced users
+- **Seamless Integration**: Works with common image formats through PIL interoperability

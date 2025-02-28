@@ -1,10 +1,21 @@
+# Site information
 site_name: Mi Documentación
+
+# Theme configuration
 theme:
   name: material
   features:
-    - content.code.copy
-    - content.code.annotate
+    - navigation.tabs         # Horizontal navigation tabs at the top
+    - navigation.sections     # Sections are groups in the sidebar
+    - navigation.indexes      # Documents can be directly attached to sections
+    - content.code.copy       # Add copy button to code blocks
+    - content.code.annotate   # Enable code annotations
+  palette:
+    # You can customize colors to match FastAPI's teal color scheme
+    primary: teal
+    accent: teal
 
+# Markdown extensions
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -17,9 +28,29 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
+# Navigation structure
 nav:
   - Inicio: index.md
-  - Guía de usuario:
-    - Instalación: user-guide/installation.md
-    - Primeros pasos: user-guide/getting-started.md
-  - Referencia API: api.md
+  - Características: features.md
+  - Aprende: 
+    - Introducción: learn/index.md
+    - Tutoriales: learn/tutorials.md
+  - Referencia: reference.md
+  - Personas: people.md
+  - Recursos: resources.md
+  - Acerca de: about.md
+  - Notas de la versión: release-notes.md
+
+# Plugins (optional but useful)
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+# Footer links and information (optional)
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/yourrepo
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/yourusername
