@@ -22,10 +22,10 @@ class CudaImage:
         self.buffer: CudaBuffer = None
         if auto_init:
             self.init_image()
-    
+
     def init_image(self):
         self.buffer = create_buffer(self.width, self.height)
-    
+
     def free(self):
         if self.buffer is None:
             return

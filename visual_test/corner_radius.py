@@ -6,10 +6,11 @@ from photoff import RGBA, CudaImage
 from typing import Annotated
 from functogui import App, imageFileReturn, intUi
 
-def corner_border_ui(color: tuple[int, int, int, int] = (255, 0, 0, 255),
-                     border_size: Annotated[int, intUi(min_value=1, max_value=500)] = 500
-                     ) -> Annotated[str, imageFileReturn]:
-    
+
+def corner_border_ui(
+    color: tuple[int, int, int, int] = (255, 0, 0, 255),
+    border_size: Annotated[int, intUi(min_value=1, max_value=500)] = 500,
+) -> Annotated[str, imageFileReturn]:
     path = "./assets/corner_border.png"
     image = CudaImage(1000, 1000)
 
@@ -19,5 +20,6 @@ def corner_border_ui(color: tuple[int, int, int, int] = (255, 0, 0, 255),
     image.free()
 
     return path
+
 
 App(corner_border_ui)
