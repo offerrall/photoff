@@ -1,11 +1,34 @@
 # PhotoFF - High-Performance Image Processing Library with CUDA
 
-!!! warning "Development Status"
-    **This library is currently under active development.** The API may change significantly between versions. Use at your own risk in production environments.
-
 PhotoFF is a high-performance image processing library that uses CUDA to achieve exceptional processing speeds. Designed to maximize performance through efficient GPU memory management.
 
+## Basic Example
+
+```python
+from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
+from photoff.io import save_image, load_image
+from photoff import CudaImage
+
+# Load the image
+src_image = load_image("./assets/stock.jpg")
+
+# Apply filters
+apply_gaussian_blur(src_image, radius=5.0)
+apply_corner_radius(src_image, size=200)
+
+# Save the result
+save_image(src_image, "./assets/gaussian_blur_test.png")
+
+# Free resources
+src_image.free()
+```
+
+![Gaussian Blur Test](/assets/gaussian_blur_test.png)
+
 ## Key Features
+
+!!! warning "Development Status"
+    **This only the beginning!** More features are coming soon.
 
 - **Image blending**: Combine multiple images with different blending modes.
 - **Fill operations**: Fill an image with a solid color or a gradient.
@@ -16,62 +39,3 @@ PhotoFF is a high-performance image processing library that uses CUDA to achieve
 - **Utility functions**: Calculate padding and compose images to cover containers.
 - **I/O operations**: Load images from files, save images, and convert CUDA images to PIL images.
 
-## Basic Example
-
-```python
-from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
-from photoff.io import save_image, load_image
-from photoff import CudaImage
-
-# Define parameters
-image_path = "./assets/stock.jpg"
-radius = 5.0
-output_path = "./assets/gaussian_blur_test.png"
-
-# Load the image
-src_image = load_image(image_path)
-
-# Create auxiliary buffer
-aux_buffer = CudaImage(src_image.width, src_image.height)
-
-# Apply filters
-apply_gaussian_blur(src_image, radius)
-apply_corner_radius(src_image, 200)
-
-# Save the result
-save_image(src_image, output_path)
-
-# Free resources
-src_image.free()
-aux_buffer.free()
-```
-
-## Memory Management & Performance
-
-PhotoFF has been designed with a focus on maximum performance through efficient GPU memory management. The library achieves exceptional processing speeds (up to 30,000 FPS for fill operations at 1920p on an RTX 3070) by implementing several key optimization strategies:
-
-### Buffer Reuse & Memory Control
-
-Unlike many image processing libraries that allocate and free memory for each operation, PhotoFF gives you complete control over buffer allocation and reuse. Key benefits include:
-
-- **Explicit Buffer Management**: Create buffers once and reuse them across multiple operations to eliminate allocation overhead.
-- **Processing Pipelines**: Chain multiple effects with zero intermediate allocations.
-- **Size Flexibility**: Buffers can be larger than strictly needed for a given operation, allowing pre-allocation of maximum-size buffers that can be reused for smaller operations.
-
-## Requirements
-
-- NVIDIA GPU with CUDA support
-- CUDA Toolkit (ensure `nvcc` is in PATH)
-- Python 3.9+
-- Visual Studio (Windows) for compiling the DLL
-- Python dependencies: NumPy, Pillow, CFFI
-    - Numpy is only for loading/saving images and is not required for core operations
-    - Pillow is required for loading/saving images and text rendering
-    - CFFI is required for interfacing with the CUDA DLL
-
-## Quick Navigation
-
-- [Installation Guide](user-guide/installation.md)
-- [Getting Started](user-guide/getting-started.md)
-- [API Reference](api/core/cuda-image.md)
-- [Performance](advanced/performance.md)
