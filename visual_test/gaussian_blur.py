@@ -16,13 +16,11 @@ def gaussian_blur_ui(
 
     radius = float(radius)
 
-    aux_buffer = CudaImage(src_image.width, src_image.height)
     apply_gaussian_blur(src_image, radius)
     apply_corner_radius(src_image, 200)
     save_image(src_image, path)
 
     src_image.free()
-    aux_buffer.free()
 
     return path
 

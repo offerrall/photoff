@@ -19,21 +19,31 @@ PhotoFF is a high-performance image processing library that uses CUDA to achieve
 ## Basic Example
 
 ```python
-from photoff.operations.filters import apply_shadow
-from photoff.io import load_image, save_image
-from photoff import RGBA
+from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
+from photoff.io import save_image, load_image
+from photoff import CudaImage
 
-# Load image
-image = load_image("./assets/image.png")
+# Define parameters
+image_path = "./assets/stock.jpg"
+radius = 5.0
+output_path = "./assets/gaussian_blur_test.png"
 
-# Apply shadow effect
-apply_shadow(image, radius=5, intensity=0.5, shadow_color=RGBA(0, 0, 0, 255), inner=True)
+# Load the image
+src_image = load_image(image_path)
 
-# Save image
-save_image(image, "./assets/image_with_shadow.png")
+# Create auxiliary buffer
+aux_buffer = CudaImage(src_image.width, src_image.height)
 
-# Free GPU memory
-image.free()
+# Apply filters
+apply_gaussian_blur(src_image, radius)
+apply_corner_radius(src_image, 200)
+
+# Save the result
+save_image(src_image, output_path)
+
+# Free resources
+src_image.free()
+aux_buffer.free()
 ```
 
 ## Memory Management & Performance
