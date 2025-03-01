@@ -10,8 +10,6 @@ When working with CUDA-accelerated image processing, memory operations are among
 
 1. **Allocations**: Each call to `CudaImage()` triggers a `cudaMalloc()` operation which is relatively slow
 2. **Transfers**: Moving data between CPU and GPU memory is extremely expensive
-3. **Deallocations**: Freeing memory with `.free()` triggers `cudaFree()` which also has overhead
-4. **Fragmentation**: Frequent allocations and deallocations can fragment GPU memory
 
 PhotoFF provides several strategies to minimize these costs:
 
@@ -22,44 +20,50 @@ PhotoFF provides several strategies to minimize these costs:
 Many operations naturally produce new output (resize, crop, filters). PhotoFF allows passing pre-allocated destination buffers instead of creating new memory:
 
 ```python
-from photoff.core.types import CudaImage
+from photoff.operations.fill import fill_gradient
 from photoff.operations.resize import resize, ResizeMethod
+from photoff.io import save_image
+from photoff import CudaImage, RGBA
 
 # Pre-allocate source and destination buffers once
 original = CudaImage(1920, 1080)
 resized_cache = CudaImage(800, 600)
 
+# Fill the original image with a gradient
+fill_gradient(original, RGBA(0, 0, 0, 255), RGBA(255, 255, 255, 255))
+
 # Use pre-allocated buffer as destination
 resize(original, 800, 600, method=ResizeMethod.BICUBIC, resize_image_cache=resized_cache)
-```
 
-Common cache parameters throughout the library:
-- `resize_image_cache` for resize operations
-- `container_image_cache` for container operations
-- `image_copy_cache` for filters requiring a copy of the original
-- `crop_image_cache` for cropping operations
+# Save the resized image
+save_image(resized_cache, "./resized_image.png")
+```
 
 ### 2. Temporary Buffer Reuse
 
 Some operations like blur, shadow, and stroke require a copy of the original image for internal calculations. You can reuse the same temporary buffer across multiple operations:
 
 ```python
-from photoff.operations.filters import apply_gaussian_blur, apply_shadow
-from photoff.core.types import CudaImage, RGBA
+from photoff.operations.filters import apply_gaussian_blur
+from photoff.core.buffer import copy_buffers_same_size
+from photoff.io import save_image, load_image
+from photoff import CudaImage, RGBA
 
 # Create main image and shared temporary buffer
-image = CudaImage(800, 600)
-temp_buffer = CudaImage(800, 600)  # Same dimensions required
+temp_buffer = CudaImage(5000, 5000)  # Example for extra buffer space
 
-# Reuse temp buffer for different operations
+image = load_image("./assets/stock.jpg")
+
+temp_buffer.height = image.height # Set the same size as the main image
+temp_buffer.width = image.width # Set the same size as the main image
+
+# Copy the main image to the temporary buffer
+copy_buffers_same_size(temp_buffer.buffer, image.buffer, image.width, image.height) 
+
+# Apply the Gaussian blur to the main image, using the temporary buffer as a cache
 apply_gaussian_blur(image, radius=5.0, image_copy_cache=temp_buffer)
-apply_shadow(
-    image, 
-    radius=10.0, 
-    intensity=0.5, 
-    shadow_color=RGBA(0, 0, 0, 128),
-    image_copy_cache=temp_buffer  # Same buffer reused
-)
+
+save_image(image, "./test.png")
 ```
 
 ### 3. Logical Dimension Adjustment - The Core Optimization Technique

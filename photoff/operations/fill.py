@@ -7,8 +7,8 @@ def fill_color(image: CudaImage, color: RGBA) -> None:
                     color.b, color.a)
 
 
-def fill_gradient(image: CudaImage, color1: RGBA, color2: RGBA, direction: int,
-                  seamless: bool) -> None:
+def fill_gradient(image: CudaImage, color1: RGBA, color2: RGBA, direction: int = 0,
+                  seamless: bool = False) -> None:
     _lib.fill_gradient(
         image.buffer,
         image.width,
