@@ -2,19 +2,36 @@
 site_name: PhotoFF
 site_description: A library for processing images in Python with CUDA support.
 site_author: Beltrán Offerrall
+repo_name: PhotoFF
+repo_url: https://github.com/offerrall/photoff
+
 
 # Theme configuration
 theme:
   name: material
   features:
-    - navigation.tabs         # Horizontal navigation tabs at the top
-    - navigation.sections     # Sections are groups in the sidebar
-    - navigation.indexes      # Documents can be directly attached to sections
-    - content.code.copy       # Add copy button to code blocks
-    - content.code.annotate   # Enable code annotations
+    - navigation.tabs
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
   palette:
-    primary: teal
-    accent: teal
+    # Modo oscuro por defecto
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Light mode6
+    # Alternativa de modo claro
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
 
 # Markdown extensions
 markdown_extensions:
@@ -31,7 +48,7 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - PhotoFF: index.md
+  - " ": index.md
   - Learn: 
     - Overview: learn.md
     - Basics: basics.md
