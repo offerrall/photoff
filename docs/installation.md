@@ -1,34 +1,60 @@
-![Logo](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/logo_lib.png)
+## Prerequisites
 
-PhotoFF is a high-performance image processing library that uses CUDA to achieve exceptional processing speeds. Designed to maximize performance through efficient GPU memory management.
+Before installing PhotoFF, ensure you have the following prerequisites:
 
-## Basic Example
+- **Python 3.9 or newer**
+- **NVIDIA GPU with CUDA support**
+- **CUDA Toolkit 11.0 or newer** - Required for compiling the CUDA components
+- **Visual Studio with C++ support** (Windows) - Required for the CUDA compiler
+
+## Installing CUDA Toolkit
+
+1. Download the CUDA Toolkit from the [NVIDIA Developer website](https://developer.nvidia.com/cuda-downloads)
+2. Follow the installation instructions for your operating system
+3. Make sure the CUDA binaries are in your system PATH (this usually happens automatically during installation)
+4. Verify your installation by running `nvcc --version` in your terminal
+
+### Install from Source
+
+This method builds and installs the package from source code:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/offerrall/photoff.git
+   cd photoff
+   ```
+
+2. Compile the CUDA DLL:
+   ```bash
+   python photoff_cuda_src/compile.py
+   ```
+
+3. Move the compiled `photoff.dll` to a directory in your system PATH or add the directory containing the DLL to your PATH environment variable.
+
+4. Install the Python package:
+   ```bash
+   pip install .
+   ```
+
+
+## Verifying the Installation
+
+To verify your installation, run the following Python code:
 
 ```python
-from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
-from photoff.io import save_image, load_image
-from photoff import Image
+from photoff.operations.fill import fill_color
+from photoff.io import save_image
+from photoff.core.types import CudaImage, RGBA
 
-# Load the image
-src_image = load_image("./assets/stock.jpg")
+# Create a 200x200 red square
+img = CudaImage(200, 200)
+fill_color(img, RGBA(255, 0, 0, 255))
+save_image(img, "red_square.png")
+img.free()
 
-# Apply filters
-apply_gaussian_blur(src_image, radius=5.0)
-apply_corner_radius(src_image, size=200)
-
-# Save the result
-save_image(src_image, "./assets/gaussian_blur_test.png")
-
-# Free resources
-src_image.free()
+print("Installation successful!")
 ```
 
-![Gaussian Blur Test](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/gaussian_blur_test.png)
+If you see a 200x200 red square image saved as "red_square.png" and the message "Installation successful!" printed to the console, your installation is working correctly.
 
-## Key Features
 
-- **CUDA-Accelerated Processing**: Harness the power of your GPU for blazing-fast image operations
-- **Memory-Efficient Design**: Optimized buffer management minimizes memory overhead
-- **Robust Image Manipulation**: Comprehensive suite of operations including filters, transforms, and compositing
-- **Pythonic Interface**: Clean, intuitive API designed for both beginners and advanced users
-- **Seamless Integration**: Works with common image formats through PIL interoperability

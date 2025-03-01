@@ -15,16 +15,21 @@ theme:
     - navigation.indexes
     - content.code.copy
     - content.code.annotate
+    - toc.integrate
+    - navigation.tabs.sticky
+    - navigation.top
+    - hide:
+        - toc.title
   palette:
-    # Modo oscuro por defecto
+    # Dark mode (default)
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/brightness-4
-        name: Light mode6
-    # Alternativa de modo claro
+        name: Light mode
+    # Light mode alternative
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
