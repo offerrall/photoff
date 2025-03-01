@@ -7,10 +7,10 @@ PhotoFF is a high-performance image processing library that uses CUDA to achieve
 ```python
 from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
 from photoff.io import save_image, load_image
-from photoff import Image
+from photoff import CudaImage
 
-# Load the image
-src_image = load_image("./assets/stock.jpg")
+# Load the image in GPU memory
+src_image: CudaImage = load_image("./assets/stock.jpg")
 
 # Apply filters
 apply_gaussian_blur(src_image, radius=5.0)
@@ -19,7 +19,7 @@ apply_corner_radius(src_image, size=200)
 # Save the result
 save_image(src_image, "./assets/gaussian_blur_test.png")
 
-# Free resources
+# Free the image from GPU memory
 src_image.free()
 ```
 

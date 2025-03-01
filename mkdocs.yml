@@ -48,7 +48,7 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - " ": index.md
+  - Start: index.md
   - Learn: 
     - Overview: learn.md
     - Installation: installation.md
