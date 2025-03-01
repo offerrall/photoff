@@ -55,10 +55,9 @@ markdown_extensions:
 nav:
   - Start: index.md
   - Learn: 
-    - Overview: learn.md
-    - Installation: installation.md
     - Basics: basics.md
     - Advanced: advanced.md
+    - Installation: installation.md
   - API: api.md
 
 # Plugins (optional but useful)
