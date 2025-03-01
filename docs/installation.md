@@ -36,7 +36,6 @@ This method builds and installs the package from source code:
    pip install .
    ```
 
-
 ## Verifying the Installation
 
 To verify your installation, run the following Python code:
