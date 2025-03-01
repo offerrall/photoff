@@ -158,4 +158,3 @@ Now that you understand the basics, you can:
 
 - Explore the [Advanced Topics](advanced.md) for more memory management and performance tips
 - Check the [API Reference](api.md) for detailed information on all functions
-- Try combining multiple effects to create unique image transformations
