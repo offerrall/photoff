@@ -16,7 +16,7 @@ from photoff.core.types import CudaImage
 # Reserving GPU memory for an 800x600 image
 image = CudaImage(800, 600)
 
-# Always free GPU memory when done
+# Free the image from GPU memory when done
 image.free()
 ```
 
@@ -50,7 +50,7 @@ image = load_image("input.jpg")
 # Save an image to disk
 save_image(image, "output.png")
 
-# Always free memory when done
+# Free the image from GPU memory
 image.free()
 ```
 
@@ -73,7 +73,7 @@ direction = 0  # 0: horizontal, 1: vertical, 2: diagonal, 3: radial
 seamless = False
 fill_gradient(image, start_color, end_color, direction, seamless)
 
-# Don't forget to free
+# Free the image from GPU memory
 image.free()
 ```
 
@@ -99,6 +99,8 @@ apply_grayscale(image)
 
 # Save the result
 save_image(image, "filtered.png")
+
+# Free the image from GPU memory
 image.free()
 ```
 
@@ -147,7 +149,7 @@ blend(background, foreground, 100, 100)
 # Save the result
 save_image(background, "blended.png")
 
-# Free memory
+# Free the images from GPU memory
 background.free()
 foreground.free()
 ```
