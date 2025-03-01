@@ -13,7 +13,7 @@ The `CudaImage` class is the central object in PhotoFF. It represents an image s
 ```python
 from photoff.core.types import CudaImage
 
-# Create a blank 800x600 image
+# Reserving GPU memory for an 800x600 image
 image = CudaImage(800, 600)
 
 # Always free GPU memory when done
@@ -44,7 +44,7 @@ To load images from disk and save them back:
 from photoff.io import load_image, save_image
 from photoff.core.types import CudaImage
 
-# Load an image from disk
+# Load an image from disk into GPU memory
 image = load_image("input.jpg")
 
 # Save an image to disk
@@ -152,70 +152,10 @@ background.free()
 foreground.free()
 ```
 
-## Memory Management
-
-PhotoFF operates on GPU memory, which makes it fast but requires careful management:
-
-1. Always call `.free()` on any `CudaImage` when you're done with it
-2. For complex operations, consider reusing existing buffers:
-
-```python
-# Inefficient - creates a new buffer for each operation
-image = load_image("input.jpg")
-apply_gaussian_blur(image, radius=5.0)
-apply_corner_radius(image, size=20)
-save_image(image, "output.png")
-image.free()
-
-# More efficient - reuses the buffer for the blur operation
-image = load_image("input.jpg")
-buffer = CudaImage(image.width, image.height)  # Create once, reuse multiple times
-apply_gaussian_blur(image, radius=5.0, image_copy_cache=buffer)
-apply_corner_radius(image, size=20)
-save_image(image, "output.png")
-image.free()
-buffer.free()
-```
-
-## Basic Image Processing Workflow
-
-A typical workflow using PhotoFF might look like this:
-
-```python
-from photoff.io import load_image, save_image
-from photoff.operations.filters import apply_gaussian_blur, apply_corner_radius
-from photoff.operations.resize import resize, ResizeMethod
-
-# Load the image
-original = load_image("input.jpg")
-
-# Resize if needed
-if original.width > 1000 or original.height > 1000:
-    resized = resize(original, 1000, 1000, method=ResizeMethod.BICUBIC)
-    original.free()  # Free the original once we have the resized copy
-    image = resized
-else:
-    image = original
-
-# Create a buffer for operations that need it
-buffer = CudaImage(image.width, image.height)
-
-# Apply processing operations
-apply_gaussian_blur(image, radius=3.0, image_copy_cache=buffer)
-apply_corner_radius(image, size=30)
-
-# Save the result
-save_image(image, "processed.png")
-
-# Clean up
-image.free()
-buffer.free()
-```
-
 ## Next Steps
 
 Now that you understand the basics, you can:
 
-- Explore the [Advanced Topics](advanced.md) for more complex operations
+- Explore the [Advanced Topics](advanced.md) for more memory management and performance tips
 - Check the [API Reference](api.md) for detailed information on all functions
 - Try combining multiple effects to create unique image transformations
