@@ -27,8 +27,8 @@ src_image.free()
 
 ## Key Features
 
-- **CUDA-Accelerated Processing**: Harness the power of your GPU for blazing-fast image operations
-- **Memory-Efficient Design**: Optimized buffer management minimizes memory overhead
-- **Robust Image Manipulation**: Comprehensive suite of operations including filters, transforms, and compositing
 - **Pythonic Interface**: Clean, intuitive API designed for both beginners and advanced users
+- **Robust Image Manipulation**: Comprehensive suite of operations including filters, transforms, and compositing
 - **Seamless Integration**: Works with common image formats through PIL interoperability
+- **CUDA-Accelerated Processing**: Harness the power of your GPU for blazing-fast image operations
+- **Memory-Efficient Design**: Optional advanced memory management for optimized buffer management
