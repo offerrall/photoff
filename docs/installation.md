@@ -1,3 +1,5 @@
+# PhotoFF Installation Guide
+
 ## Prerequisites
 
 Before installing PhotoFF, ensure you have the following prerequisites:
