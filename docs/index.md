@@ -39,6 +39,6 @@ src_image.free()
 
 Now that you understand the basics, you can:
 
-- Explore the [Basic Operations](docs/basics.md) to learn about loading, saving, and manipulating images
-- Dive into the [Advanced Operations](docs/advanced.md) to discover more complex image processing techniques
-- Check out the [API Reference](docs/api.md) for detailed documentation on all available functions and classes
+- Explore the [Basic Operations](basics.md) to learn about loading, saving, and manipulating images
+- Dive into the [Advanced Operations](advanced.md) to discover more complex image processing techniques
+- Check out the [API Reference](api.md) for detailed documentation on all available functions and classes
