@@ -32,3 +32,11 @@ src_image.free()
 - **Seamless Integration**: Works with common image formats through PIL interoperability
 - **CUDA-Accelerated Processing**: Harness the power of your GPU for blazing-fast image operations
 - **Memory-Efficient Design**: Optional advanced memory management for optimized buffer management
+
+## Next Steps
+
+Now that you understand the basics, you can:
+
+- Explore the [Basic Operations](docs/basics.md) to learn about loading, saving, and manipulating images
+- Dive into the [Advanced Operations](docs/advanced.md) to discover more complex image processing techniques
+- Check out the [API Reference](docs/api.md) for detailed documentation on all available functions and classes
