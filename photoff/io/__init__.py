@@ -35,4 +35,7 @@ def load_image(filename: str, container: CudaImage = None) -> CudaImage:
     c_buffer = ffi.cast("uchar4*", img_array.ctypes.data)
     copy_to_device(container.buffer, c_buffer, width, height)
 
+    container.width = width
+    container.height = height
+
     return container
