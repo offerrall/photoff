@@ -1,5 +1,7 @@
 # PhotoFF - High-Performance Image Processing Library with CUDA
 
+![Gaussian Blur Test](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/logo_lib.png)
+
 PhotoFF is a high-performance image processing library that uses CUDA to achieve exceptional processing speeds. Designed to maximize performance through efficient GPU memory management.
 
 ## Basic Example

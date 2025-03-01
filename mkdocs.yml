@@ -1,5 +1,7 @@
 # Site information
-site_name: Mi Documentación
+site_name: PhotoFF
+site_description: A library for processing images in Python with CUDA support.
+site_author: Beltrán Offerrall
 
 # Theme configuration
 theme:
@@ -11,7 +13,6 @@ theme:
     - content.code.copy       # Add copy button to code blocks
     - content.code.annotate   # Enable code annotations
   palette:
-    # You can customize colors to match FastAPI's teal color scheme
     primary: teal
     accent: teal
 
@@ -30,16 +31,12 @@ markdown_extensions:
 
 # Navigation structure
 nav:
-  - Inicio: index.md
-  - Características: features.md
-  - Aprende: 
-    - Introducción: learn/index.md
-    - Tutoriales: learn/tutorials.md
-  - Referencia: reference.md
-  - Personas: people.md
-  - Recursos: resources.md
-  - Acerca de: about.md
-  - Notas de la versión: release-notes.md
+  - PhotoFF: index.md
+  - Learn: 
+    - Overview: learn.md
+    - Basics: basics.md
+    - Advanced: advanced.md
+  - API: api.md
 
 # Plugins (optional but useful)
 plugins:
@@ -51,6 +48,6 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername/yourrepo
+      link: https://github.com/offerrall/photoff
     - icon: fontawesome/brands/twitter
-      link: https://twitter.com/yourusername
+      link: https://twitter.com/offerrall
