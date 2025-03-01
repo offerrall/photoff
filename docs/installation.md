@@ -8,6 +8,22 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 - **NVIDIA GPU with CUDA support**
 - **CUDA Toolkit 11.0 or newer** - Required for compiling the CUDA components
 - **Visual Studio with C++ support** (Windows) - Required for the CUDA compiler
+- **CFFI** - Used for interfacing between Python and the CUDA library
+- **Pillow** - Used for I/O operations and text rendering
+- **NumPy** - Used only for memory management when transferring images from Pillow to CUDA
+
+## Python Dependencies
+
+Install the required Python packages:
+
+```bash
+pip install cffi pillow numpy
+```
+
+Note:
+- **CFFI** is essential for PhotoFF as it provides the bridge between Python and the CUDA-accelerated DLL
+- **Pillow** is used for loading and saving images, as well as text rendering functions
+- **NumPy** is only used for efficient memory management when transferring image data between Pillow and CUDA buffers
 
 ## Installing CUDA Toolkit
 
@@ -16,7 +32,7 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 3. Make sure the CUDA binaries are in your system PATH (this usually happens automatically during installation)
 4. Verify your installation by running `nvcc --version` in your terminal
 
-### Install from Source
+## Install from Source
 
 This method builds and installs the package from source code:
 
@@ -57,5 +73,3 @@ print("Installation successful!")
 ```
 
 If you see a 200x200 red square image saved as "red_square.png" and the message "Installation successful!" printed to the console, your installation is working correctly.
-
-
