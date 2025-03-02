@@ -30,7 +30,6 @@ def render_text(
     pil_image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(pil_image)
     
-    # Convertir objeto RGBA a tupla para la función fill
     color_tuple = (color.r, color.g, color.b, color.a)
     draw.text((-left, -top), text, fill=color_tuple, font=font)
     
