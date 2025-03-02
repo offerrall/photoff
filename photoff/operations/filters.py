@@ -68,7 +68,7 @@ def apply_stroke(
     stroke_width: int,
     stroke_color: RGBA,
     image_copy_cache: CudaImage = None,
-    inner: bool = False,
+    inner: bool = True,
 ) -> None:
     need_free = False
     if image_copy_cache is None:

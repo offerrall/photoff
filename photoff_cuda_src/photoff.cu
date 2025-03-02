@@ -573,23 +573,29 @@ __global__ void innerStrokeKernel(const uchar4* src,
     int r2 = stroke_width * stroke_width;
     bool isBorder = false;
     
-    for (int dy = -stroke_width; dy <= stroke_width && !isBorder; dy++) {
-        for (int dx = -stroke_width; dx <= stroke_width && !isBorder; dx++) {
-            if (dx*dx + dy*dy > r2) continue;
-            
-            int nx = x + dx;
-            int ny = y + dy;
-            if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
-            
-            if (src[ny * width + nx].w == 0) {
-                isBorder = true;
+    if (x < stroke_width || x >= width - stroke_width || 
+        y < stroke_width || y >= height - stroke_width) {
+        isBorder = true;
+    }
+    
+    if (!isBorder) {
+        for (int dy = -stroke_width; dy <= stroke_width && !isBorder; dy++) {
+            for (int dx = -stroke_width; dx <= stroke_width && !isBorder; dx++) {
+                if (dx*dx + dy*dy > r2) continue;
+                
+                int nx = x + dx;
+                int ny = y + dy;
+                if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
+                    isBorder = true;
+                } else if (src[ny * width + nx].w == 0) {
+                    isBorder = true;
+                }
             }
         }
     }
     
     dst[idx] = isBorder ? stroke_color : pixel;
 }
-
 
 __global__ void applyOpacityKernel(uchar4* buffer, 
                                    uint32_t width, 
