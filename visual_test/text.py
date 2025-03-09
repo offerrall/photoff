@@ -1,5 +1,6 @@
 from photoff.operations.text import render_text
 from photoff.io import save_image
+from photoff import RGBA
 
 from typing import Annotated
 from functogui import App, imageFileReturn, fileUi, intUi
@@ -12,7 +13,7 @@ def text_ui(
     text_color: tuple[int, int, int, int] = (0, 0, 0, 255),
 ) -> Annotated[str, imageFileReturn]:
     path = "./assets/text_test.png"
-    text_image = render_text(text, font_path, font_size, text_color)
+    text_image = render_text(text, font_path, font_size, RGBA(*text_color))
     save_image(text_image, path)
     text_image.free()
 
