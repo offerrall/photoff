@@ -130,3 +130,67 @@ def cover_image_in_container(
         resized_image.free()
 
     return container
+
+def create_image_grid(
+    image: CudaImage,
+    grid_width: int,
+    grid_height: int,
+    num_images: int,
+    spacing: int = 0,
+    background_color: RGBA = RGBA(0, 0, 0, 0),
+    grid_image_cache: CudaImage = None,
+) -> CudaImage:
+    """
+    Creates a grid of specified dimensions and fills it with copies of the same image
+    up to the specified number.
+    
+    Args:
+        image: Source image to repeat in the grid
+        grid_width: Number of columns in the grid
+        grid_height: Number of rows in the grid
+        num_images: Number of images to place in the grid (must be <= grid_width * grid_height)
+        spacing: Space between grid cells in pixels
+        background_color: Color to fill the background with
+        grid_image_cache: Optional pre-allocated buffer for the grid
+        
+    Returns:
+        CudaImage containing the grid
+    """
+
+    total_cells = grid_width * grid_height
+    if num_images > total_cells:
+        raise ValueError(
+            f"Number of images ({num_images}) exceeds grid capacity ({total_cells})"
+        )
+    
+    width = (image.width * grid_width) + (spacing * (grid_width - 1))
+    height = (image.height * grid_height) + (spacing * (grid_height - 1))
+    
+    if grid_image_cache is None:
+        result = CudaImage(width, height)
+    else:
+        if grid_image_cache.width != width or grid_image_cache.height != height:
+            raise ValueError(
+                f"Grid cache dimensions must match: {width}x{height}, got {grid_image_cache.width}x{grid_image_cache.height}"
+            )
+        result = grid_image_cache
+    
+    fill_color(result, background_color)
+    
+    count = 0
+    for y in range(grid_height):
+        for x in range(grid_width):
+            if count >= num_images:
+                break
+                
+            pos_x = x * (image.width + spacing)
+            pos_y = y * (image.height + spacing)
+            
+            blend(result, image, pos_x, pos_y)
+            
+            count += 1
+        
+        if count >= num_images:
+            break
+    
+    return result
