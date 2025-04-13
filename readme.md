@@ -10,7 +10,7 @@ A high-performance image processing library that uses CUDA to achieve exceptiona
 - **Advanced memory management**: Pre-allocate buffers once and adjust their logical dimensions on-the-fly
 - **Comprehensive operations**: Includes filters, transformations, blending, and more
 - **Clean Python API**: Intuitive interface designed for both beginners and advanced users
-- **Minimal dependencies**: Only requires CFFI, Pillow, and NumPy for specific operations
+- **Minimal dependencies**: Only uses CFFI and Pillow. NumPy is used for low-level data conversion, not for core processing.
 
 ## Installation
 
