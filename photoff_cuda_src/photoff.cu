@@ -60,9 +60,9 @@ __global__ void chromaKeyKernel(uchar4* buffer,
         
         if (makeTransparent) {
             if (zero_all_channels) {
-                buffer[buffer_idx] = make_uchar4(0, 0, 0, 0); // Poner todo el píxel a 0
+                buffer[buffer_idx] = make_uchar4(0, 0, 0, 0);
             } else {
-                buffer[buffer_idx].w = 0; // Solo modificar alfa, manteniendo RGB intacto
+                buffer[buffer_idx].w = 0;
             }
         }
     }
