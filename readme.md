@@ -123,7 +123,7 @@ Grayscale: PhotoFF was 45.12 times faster than Pillow.
 ------------------------------------------------------------
 ```
 
-These benchmarks highlight the significant performance advantages of PhotoFF, especially in GPU-accelerated operations.
+These benchmarks highlight the significant performance advantages of PhotoFF.
 
 ---
 
