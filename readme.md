@@ -87,46 +87,6 @@ resize(image2, 1280, 720, resize_image_cache=shared_buffer)
 # No reallocs, no fragmentation, max performance
 ```
 
----
-
-## 🚀 Performance Benchmarks
-
-The following performance tests were conducted on an RTX 3070:
-
-- **Fill Color:** Achieved over **30,000 FPS** in `fill_color()` operations.
-- **Consistent Frame Times:** Demonstrated stable performance without frame rate spikes, crucial for real-time applications.
-- **Optimized for Various Workloads:** Designed to excel in both real-time rendering and batch processing tasks.
-
-**Performance Comparison with Pillow:**
-
-```
-------------------------------------------------------------
-Performance comparison between PhotoFF and Pillow:
-------------------------------------------------------------
-PhotoFF Resize (3840x2160) without cache: 0.002497 seconds (average of 20 iterations)
-PhotoFF Resize (3840x2160) with cache: 0.000854 seconds (average of 20 iterations)
-Pillow Resize (3840x2160): 0.007858 seconds (average of 20 iterations)
-------------------------------------------------------------
-PhotoFF Gaussian Blur (radius=5) without cache: 0.054405 seconds (average of 20 iterations)
-PhotoFF Gaussian Blur (radius=5) with cache: 0.065551 seconds (average of 20 iterations)
-Pillow Gaussian Blur (radius=5): 0.224554 seconds (average of 20 iterations)
-------------------------------------------------------------
-PhotoFF Grayscale: 0.000193 seconds (average of 20 iterations)
-Pillow Grayscale: 0.008707 seconds (average of 20 iterations)
-------------------------------------------------------------
-Performance Comparison Summary:
-------------------------------------------------------------
-Resize (without cache): PhotoFF was 3.15 times faster than Pillow.
-Resize (with cache): PhotoFF was 9.20 times faster than Pillow.
-Gaussian Blur (without cache): PhotoFF was 4.13 times faster than Pillow.
-Grayscale: PhotoFF was 45.12 times faster than Pillow.
-------------------------------------------------------------
-```
-
-These benchmarks highlight the significant performance advantages of PhotoFF.
-
----
-
 ## 📚 Documentation
 
 Explore the full documentation at [https://offerrall.github.io/photoff/](https://offerrall.github.io/photoff/):
