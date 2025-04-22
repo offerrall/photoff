@@ -2,33 +2,33 @@
 
 ![PhotoFF Logo](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/logo_lib.png)
 
-**PhotoFF** is a high-performance GPU image processing library written in Python and accelerated with CUDA.  
-It was originally created as part of a custom OBS-style rendering engine and has grown into a personal tool I plan to use and maintain for years to come.
+**PhotoFF** is a high-performance GPU image processing library written in Python and accelerated with CUDA.
+Originally developed as part of a custom OBS-style rendering engine, it has evolved into a personal tool that I intend to use and maintain for the foreseeable future.
 
-I’m sharing it because it might help others, and because I value real feedback. This isn’t a product—it’s a project I care about.
+I'm sharing this project because it might be beneficial to others, and I highly value real-world feedback. Please note that this is not a commercial product but a project I am passionate about.
 
 ---
 
 ## ⚡ Key Features
 
-- **CUDA acceleration** – Filters, blending, resizing and more, all in real time
-- **Smart memory management** – Allocate once, reuse infinitely with logical size adjustments
-- **Simple and direct Python API** – Like PIL, but on steroids
-- **Proven performance** – Up to **30,000 FPS in fill operations** on an RTX 3070
-- **Thorough documentation** – Clear explanations, real examples
-- **Minimal dependencies** – Only `pillow`, `cffi` and `numpy` (for transfer only)
+- **CUDA Acceleration:** Experience real-time filters, blending, resizing, and more, all powered by your GPU.
+- **Smart Memory Management:** Allocate memory once and reuse it efficiently with dynamic size adjustments.
+- **Simple and Direct Python API:** Enjoy a user-friendly API similar to PIL, but supercharged for GPU processing.
+- **Exceptional Performance:** Achieve speeds of up to **30,000 FPS in fill operations** on an RTX 3070.
+- **Comprehensive Documentation:** Benefit from clear explanations and practical examples.
+- **Minimal Dependencies:** Requires only `pillow`, `cffi`, and `numpy` (solely for data transfer).
 
 ---
 
 ## 🧠 Why PhotoFF Exists
 
-I didn’t want to reimplement PIL. I needed something I could use for:
+My motivation for creating PhotoFF stemmed from a need for a solution beyond the capabilities of existing libraries like PIL for tasks such as:
 
-- A real-time scene compositor (my own OBS engine)
-- GPU-based overlay generation with visual effects
-- Batch processing of images (thumbnails, banners, collages)
-- Fluid visual interfaces with dynamic filters
-- Automation tools for creators, streamers, VTubers, or dashboards
+- Real-time scene composition (powering my custom OBS engine).
+- Generating GPU-accelerated overlays with visual effects.
+- Batch image processing (creating thumbnails, banners, and collages).
+- Developing fluid visual interfaces with dynamic filters.
+- Building automation tools for creators, streamers, VTubers, and dashboards.
 
 ---
 
@@ -44,7 +44,7 @@ I didn’t want to reimplement PIL. I needed something I could use for:
 
 ### Installation
 
-Follow the [Installation Guide](https://offerrall.github.io/photoff/installation/) for setup and compilation instructions.
+For detailed setup and compilation instructions, please refer to the [Installation Guide](https://offerrall.github.io/photoff/installation/).
 
 ---
 
@@ -89,18 +89,47 @@ resize(image2, 1280, 720, resize_image_cache=shared_buffer)
 
 ---
 
-## 🚀 Performance
+## 🚀 Performance Benchmarks
 
-Tested on an RTX 3070:
-- **30,000+ FPS** in `fill_color()` operations
-- Constant frame times, no spikes
-- Designed for real-time and batch processing workloads
+The following performance tests were conducted on an RTX 3070:
+
+- **Fill Color:** Achieved over **30,000 FPS** in `fill_color()` operations.
+- **Consistent Frame Times:** Demonstrated stable performance without frame rate spikes, crucial for real-time applications.
+- **Optimized for Various Workloads:** Designed to excel in both real-time rendering and batch processing tasks.
+
+**Performance Comparison with Pillow:**
+
+```
+------------------------------------------------------------
+Performance comparison between PhotoFF and Pillow:
+------------------------------------------------------------
+PhotoFF Resize (3840x2160) without cache: 0.002497 seconds (average of 20 iterations)
+PhotoFF Resize (3840x2160) with cache: 0.000854 seconds (average of 20 iterations)
+Pillow Resize (3840x2160): 0.007858 seconds (average of 20 iterations)
+------------------------------------------------------------
+PhotoFF Gaussian Blur (radius=5) without cache: 0.054405 seconds (average of 20 iterations)
+PhotoFF Gaussian Blur (radius=5) with cache: 0.065551 seconds (average of 20 iterations)
+Pillow Gaussian Blur (radius=5): 0.224554 seconds (average of 20 iterations)
+------------------------------------------------------------
+PhotoFF Grayscale: 0.000193 seconds (average of 20 iterations)
+Pillow Grayscale: 0.008707 seconds (average of 20 iterations)
+------------------------------------------------------------
+Performance Comparison Summary:
+------------------------------------------------------------
+Resize (without cache): PhotoFF was 3.15 times faster than Pillow.
+Resize (with cache): PhotoFF was 9.20 times faster than Pillow.
+Gaussian Blur (without cache): PhotoFF was 4.13 times faster than Pillow.
+Grayscale: PhotoFF was 45.12 times faster than Pillow.
+------------------------------------------------------------
+```
+
+These benchmarks highlight the significant performance advantages of PhotoFF, especially in GPU-accelerated operations.
 
 ---
 
 ## 📚 Documentation
 
-Full documentation: [https://offerrall.github.io/photoff/](https://offerrall.github.io/photoff/)
+Explore the full documentation at [https://offerrall.github.io/photoff/](https://offerrall.github.io/photoff/):
 
 - [🔰 Basics](https://offerrall.github.io/photoff/basics/)
 - [⚙️ Advanced Techniques](https://offerrall.github.io/photoff/advanced/)
@@ -110,20 +139,16 @@ Full documentation: [https://offerrall.github.io/photoff/](https://offerrall.git
 
 ## ⚠️ About Alpha Blending and Color Spaces
 
-PhotoFF uses a simple weighted alpha blend model.  
-It does **not** apply gamma correction or use linear color space.  
-It’s not for cinematic or HDR production. But for UI, overlays, thumbnails, or dynamic visuals, it’s more than enough.
+PhotoFF employs a straightforward weighted alpha blend model. It's important to note that it does **not** perform gamma correction or operate in a linear color space. Therefore, it may not be suitable for cinematic or HDR production. However, for UI elements, overlays, thumbnails, and dynamic visual effects, its capabilities are more than sufficient.
 
 ---
 
 ## 🤝 Contributing
 
-Yes, I accept contributions. This is a personal project, but I plan to keep using and improving it. If you want to help—jump in.
+Contributions are welcome! While this is a personal project, I intend to continue its development and improvement. If you're interested in contributing, please feel free to jump in.
 
 ---
 
 ## 📃 License
 
 MIT.
-
----
