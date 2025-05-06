@@ -140,22 +140,6 @@ def create_image_grid(
     background_color: RGBA = RGBA(0, 0, 0, 0),
     grid_image_cache: CudaImage = None,
 ) -> CudaImage:
-    """
-    Creates a grid of specified dimensions and fills it with copies of the same image
-    up to the specified number.
-    
-    Args:
-        image: Source image to repeat in the grid
-        grid_width: Number of columns in the grid
-        grid_height: Number of rows in the grid
-        num_images: Number of images to place in the grid (must be <= grid_width * grid_height)
-        spacing: Space between grid cells in pixels
-        background_color: Color to fill the background with
-        grid_image_cache: Optional pre-allocated buffer for the grid
-        
-    Returns:
-        CudaImage containing the grid
-    """
 
     total_cells = grid_width * grid_height
     if num_images > total_cells:
