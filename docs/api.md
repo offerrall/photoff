@@ -127,6 +127,9 @@ Resizes and centers an image inside a container using reusable buffers.
 ### `create_image_grid(...) -> CudaImage`
 Creates a grid filled with repeated instances of an image.
 
+### `create_image_collage(...) -> CudaImage`
+Creates a collage of images in a grid layout.
+
 ---
 
 For advanced memory optimization techniques, see [Advanced Topics](advanced.md).

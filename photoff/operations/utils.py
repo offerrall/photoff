@@ -178,3 +178,52 @@ def create_image_grid(
             break
     
     return result
+
+
+def create_image_collage(
+    images: list[CudaImage],
+    grid_width: int,
+    grid_height: int,
+    spacing: int = 0,
+    background_color: RGBA = RGBA(0, 0, 0, 0),
+    collage_image_cache: CudaImage = None,
+) -> CudaImage:
+
+    total_cells = grid_width * grid_height
+    num_images = len(images)
+    if num_images > total_cells:
+        raise ValueError(
+            f"Number of images ({num_images}) exceeds grid capacity ({total_cells})"
+        )
+
+    first = images[0]
+    img_w, img_h = first.width, first.height
+    for img in images:
+        if img.width != img_w or img.height != img_h:
+            raise ValueError(
+                "All images must have the same dimensions to form a uniform collage"
+            )
+
+    width = (img_w * grid_width) + (spacing * (grid_width - 1))
+    height = (img_h * grid_height) + (spacing * (grid_height - 1))
+
+    if collage_image_cache is None:
+        result = CudaImage(width, height)
+    else:
+        if (collage_image_cache.width != width
+                or collage_image_cache.height != height):
+            raise ValueError(
+                f"Collage cache dimensions must match: {width}x{height}, got {collage_image_cache.width}x{collage_image_cache.height}"
+            )
+        result = collage_image_cache
+
+    fill_color(result, background_color)
+
+    for idx, img in enumerate(images):
+        col = idx % grid_width
+        row = idx // grid_width
+        x_pos = col * (img_w + spacing)
+        y_pos = row * (img_h + spacing)
+        blend(result, img, x_pos, y_pos)
+
+    return result
