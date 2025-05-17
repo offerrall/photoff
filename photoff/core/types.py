@@ -12,47 +12,48 @@ class RGBA:
 
 
 class CudaImage:
-    width: int
-    height: int
-    buffer: CudaBuffer
 
     def __init__(self, width: int, height: int, auto_init: bool = True):
-        self.width = width
-        self.height = height
-        self.buffer: CudaBuffer = None
 
-        self._original_width = width
-        self._original_height = height
+        self._alloc_width  = width
+        self._alloc_height = height
 
+        self._width  = width
+        self._height = height
+
+        self.buffer = None
         if auto_init:
             self.init_image()
 
     @property
-    def width(self):
+    def width(self) -> int:
         return self._width
 
     @width.setter
     def width(self, value: int):
         if value > self._alloc_width:
-            raise ValueError(f"width {value} is greater than allocated width {self._alloc_width}")
+            raise ValueError(
+                f"width {value} > alloc_width {self._alloc_width}"
+            )
         self._width = value
 
     @property
-    def height(self):
+    def height(self) -> int:
         return self._height
 
     @height.setter
     def height(self, value: int):
         if value > self._alloc_height:
-            raise ValueError(f"height {value} is greater than allocated height {self._alloc_height}")
+            raise ValueError(
+                f"height {value} > alloc_height {self._alloc_height}"
+            )
         self._height = value
 
     def init_image(self):
-        self.buffer = create_buffer(self.width, self.height)
+        if self.buffer is None:
+            self.buffer = create_buffer(self._alloc_width, self._alloc_height)
 
     def free(self):
-        if self.buffer is None:
-            return
-        free_buffer(self.buffer)
-        self.buffer = None
-    
+        if self.buffer is not None:
+            free_buffer(self.buffer)
+            self.buffer = None
