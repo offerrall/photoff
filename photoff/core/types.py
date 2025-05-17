@@ -20,8 +20,32 @@ class CudaImage:
         self.width = width
         self.height = height
         self.buffer: CudaBuffer = None
+
+        self._original_width = width
+        self._original_height = height
+
         if auto_init:
             self.init_image()
+
+    @property
+    def width(self):
+        return self._width
+
+    @width.setter
+    def width(self, value: int):
+        if value > self._alloc_width:
+            raise ValueError(f"width {value} is greater than allocated width {self._alloc_width}")
+        self._width = value
+
+    @property
+    def height(self):
+        return self._height
+
+    @height.setter
+    def height(self, value: int):
+        if value > self._alloc_height:
+            raise ValueError(f"height {value} is greater than allocated height {self._alloc_height}")
+        self._height = value
 
     def init_image(self):
         self.buffer = create_buffer(self.width, self.height)
@@ -31,3 +55,4 @@ class CudaImage:
             return
         free_buffer(self.buffer)
         self.buffer = None
+    
