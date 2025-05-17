@@ -4,11 +4,19 @@ This guide covers the fundamental concepts and operations of the PhotoFF library
 
 ## Core Concepts
 
-PhotoFF is built around a few key concepts:
-
 ### CudaImage
 
 The `CudaImage` class is the central object in PhotoFF. It represents an image stored in GPU memory as a RGBA buffer.
+
+> **Note:** `CudaImage` does **not** guarantee that the newly reserved GPU memory is zero‑initialized. If you plan to use the image as a fully transparent background, clear it right after allocation:
+>
+> ```python
+> from photoff.core.types import CudaImage, RGBA
+> from photoff.operations.fill import fill_color
+>
+> image = CudaImage(800, 600)
+> fill_color(image, RGBA(0, 0, 0, 0))  # Ensure full transparency
+> ```
 
 ```python
 from photoff.core.types import CudaImage
@@ -158,5 +166,5 @@ foreground.free()
 
 Now that you understand the basics, you can:
 
-- Explore the [Advanced Topics](advanced.md) for more memory management and performance tips
-- Check the [API Reference](api.md) for detailed information on all functions
+* Explore the [Advanced Topics](advanced.md) for more memory management and performance tips
+* Check the [API Reference](api.md) for detailed information on all functions
