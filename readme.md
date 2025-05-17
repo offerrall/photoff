@@ -14,7 +14,7 @@ I'm sharing this project because it might be beneficial to others, and I highly 
 - **CUDA Acceleration:** Experience real-time filters, blending, resizing, and more, all powered by your GPU.
 - **Smart Memory Management:** Allocate memory once and reuse it efficiently with dynamic size adjustments.
 - **Simple and Direct Python API:** Enjoy a user-friendly API similar to PIL, but supercharged for GPU processing.
-- **Exceptional Performance:** Achieve speeds of up to **30,000 FPS in fill operations** on an RTX 3070.
+- **Exceptional Performance:** Achieve speeds of up to **30,000 FPS** on rtx 3070 with 1080p images.
 - **Comprehensive Documentation:** Benefit from clear explanations and practical examples.
 - **Minimal Dependencies:** Requires only `pillow`, `cffi`, and `numpy` (solely for data transfer).
 
@@ -24,7 +24,7 @@ I'm sharing this project because it might be beneficial to others, and I highly 
 
 My motivation for creating PhotoFF stemmed from a need for a solution beyond the capabilities of existing libraries like PIL for tasks such as:
 
-- Real-time scene composition (powering my custom OBS engine).
+- Real-time scene composition.
 - Generating GPU-accelerated overlays with visual effects.
 - Batch image processing (creating thumbnails, banners, and collages).
 - Developing fluid visual interfaces with dynamic filters.
