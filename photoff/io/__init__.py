@@ -1,8 +1,6 @@
 from ..core import ffi
 from ..core.buffer import copy_to_host, copy_to_device
 from ..core.types import CudaImage
-from ..operations.fill import fill_color
-from ..core.types import RGBA
 from PIL import Image
 import numpy as np
 
