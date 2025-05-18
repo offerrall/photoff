@@ -1,6 +1,8 @@
 from ..core import ffi
 from ..core.buffer import copy_to_host, copy_to_device
 from ..core.types import CudaImage
+from ..operations.fill import fill_color
+from ..core.types import RGBA
 from PIL import Image
 import numpy as np
 
@@ -26,6 +28,7 @@ def load_image(filename: str, container: CudaImage = None) -> CudaImage:
 
     if container is None:
         container = CudaImage(width, height)
+        fill_color(container, RGBA(0, 0, 0, 0))
 
     if width > container.width or height > container.height:
         raise ValueError("Image dimensions exceed container dimensions")
