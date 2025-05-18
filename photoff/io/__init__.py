@@ -28,7 +28,6 @@ def load_image(filename: str, container: CudaImage = None) -> CudaImage:
 
     if container is None:
         container = CudaImage(width, height)
-        fill_color(container, RGBA(0, 0, 0, 0))
 
     if width > container.width or height > container.height:
         raise ValueError("Image dimensions exceed container dimensions")
