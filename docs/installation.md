@@ -1,4 +1,5 @@
-# PhotoFF Installation Guide
+
+# PhotoFF Installation Guide (Linux & Windows)
 
 ## Prerequisites
 
@@ -6,11 +7,13 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 
 - **Python 3.9 or newer**
 - **NVIDIA GPU with CUDA support**
-- **CUDA Toolkit 11.0 or newer** - Required for compiling the CUDA components
-- **Visual Studio with C++ support** (Windows) - Required for the CUDA compiler
-- **CFFI** - Used for interfacing between Python and the CUDA library
-- **Pillow** - Used for I/O operations and text rendering
-- **NumPy** - Used only for memory management when transferring images from Pillow to CUDA
+- **CUDA Toolkit 11.0 or newer** – Required for compiling the CUDA components
+- **Visual Studio with C++ support** *(Windows only)* – Needed for the CUDA compiler
+- **CFFI** – Used for interfacing between Python and the CUDA library
+- **Pillow** – Used for image loading, saving, and text rendering
+- **NumPy** – Used for memory management when transferring image data to/from CUDA
+
+---
 
 ## Python Dependencies
 
@@ -20,21 +23,22 @@ Install the required Python packages:
 pip install cffi pillow numpy
 ```
 
-Note:
-- **CFFI** is essential for PhotoFF as it provides the bridge between Python and the CUDA-accelerated DLL
-- **Pillow** is used for loading and saving images, as well as text rendering functions
-- **NumPy** is only used for efficient memory management when transferring image data between Pillow and CUDA buffers
+---
 
 ## Installing CUDA Toolkit
 
 1. Download the CUDA Toolkit from the [NVIDIA Developer website](https://developer.nvidia.com/cuda-downloads)
-2. Follow the installation instructions for your operating system
-3. Make sure the CUDA binaries are in your system PATH (this usually happens automatically during installation)
-4. Verify your installation by running `nvcc --version` in your terminal
+2. Follow the instructions for your OS (Linux or Windows)
+3. Ensure `nvcc` is accessible:
+   ```bash
+   nvcc --version
+   ```
 
-## Install from Source
+---
 
-This method builds and installs the package from source code:
+## Compiling the CUDA Library
+
+### 🐧 For Linux:
 
 1. Clone the repository:
    ```bash
@@ -42,21 +46,68 @@ This method builds and installs the package from source code:
    cd photoff
    ```
 
-2. Compile the CUDA DLL:
+2. Compile the `.so` shared object:
    ```bash
-   python photoff_cuda_src/compile.py
+   python3 photoff_cuda_src/compile_linux.py
    ```
 
-3. Move the compiled `photoff.dll` to a directory in your system PATH or add the directory containing the DLL to your PATH environment variable.
+3. You’ll get `photoff.so`.
 
-4. Install the Python package:
+4. Make it available system-wide:
+
+   **Option A: Temporary**
    ```bash
-   pip install .
+   export LD_LIBRARY_PATH=/your/path/photoff:$LD_LIBRARY_PATH
    ```
+
+   **Option B: Permanent**
+   Add to `~/.bashrc` or `~/.zshrc`:
+   ```bash
+   export LD_LIBRARY_PATH=/your/path/photoff:$LD_LIBRARY_PATH
+   source ~/.bashrc
+   ```
+
+   **Option C: System-wide**
+   ```bash
+   echo "/your/path/photoff" | sudo tee /etc/ld.so.conf.d/photoff.conf
+   sudo ldconfig
+   ```
+
+---
+
+### 🪟 For Windows:
+
+1. Clone the repository:
+   ```powershell
+   git clone https://github.com/offerrall/photoff.git
+   cd photoff
+   ```
+
+2. Compile the `.dll` using:
+   ```powershell
+   python photoff_cuda_src/compile_windows.py
+   ```
+
+3. Add the folder containing `photoff.dll` to your system PATH:
+   - Search for “Environment Variables” in the Start menu
+   - Edit the PATH variable, and add the folder path
+   - Restart your terminal or IDE
+
+---
+
+## Installing the Python Package
+
+Run this in the root of the project (after compilation):
+
+```bash
+pip install .
+```
+
+---
 
 ## Verifying the Installation
 
-To verify your installation, run the following Python code:
+Test your installation with the following Python script:
 
 ```python
 from photoff.operations.fill import fill_color
@@ -72,4 +123,15 @@ img.free()
 print("Installation successful!")
 ```
 
-If you see a 200x200 red square image saved as "red_square.png" and the message "Installation successful!" printed to the console, your installation is working correctly.
+If you see the image `red_square.png` and the message “Installation successful!”, your setup is working.
+
+---
+
+## Notes
+- CFFI will load the appropriate file based on your OS
+
+---
+
+## License
+
+PhotoFF is distributed under the MIT license.

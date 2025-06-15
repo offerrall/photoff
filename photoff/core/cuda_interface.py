@@ -92,8 +92,6 @@ ffi.cdef("""
 if sys.platform == "win32":
     lib_name = "photoff.dll"
 else:
-    lib_name = "libphotoff.so"
+    lib_name = "photoff.so"
 
-lib_path = os.path.join(os.path.dirname(__file__), lib_name)
-
-_lib = ffi.dlopen(lib_path)
+_lib = ffi.dlopen(lib_name)
