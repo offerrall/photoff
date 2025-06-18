@@ -8,7 +8,6 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 - **Python 3.9 or newer**
 - **NVIDIA GPU with CUDA support**
 - **CUDA Toolkit 11.0 or newer** – Required for compiling the CUDA components
-- **Visual Studio with C++ support** *(Windows only)* – Needed for the CUDA compiler
 - **CFFI** – Used for interfacing between Python and the CUDA library
 - **Pillow** – Used for image loading, saving, and text rendering
 - **NumPy** – Used for memory management when transferring image data to/from CUDA
