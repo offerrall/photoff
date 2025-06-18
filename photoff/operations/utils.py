@@ -193,29 +193,22 @@ def cover_image_in_container(image: CudaImage,
         resized_image = CudaImage(new_width, new_height)
         need_free_resized = True
     else:
-        if (resize_image_cache.width != new_width
-                or resize_image_cache.height != new_height):
-            raise ValueError(
-                f"Resize cache dimensions must match: {new_width}x{new_height}, got {resize_image_cache.width}x{resize_image_cache.height}"
-            )
+        if (resize_image_cache.width != new_width or resize_image_cache.height != new_height):
+            raise ValueError(f"Resize cache dimensions must match: {new_width}x{new_height}, got {resize_image_cache.width}x{resize_image_cache.height}")
         resized_image = resize_image_cache
 
-    resize(
-        image,
-        new_width,
-        new_height,
-        method=resize_mode,
-        resize_image_cache=resized_image,
-    )
+    resize(image,
+           new_width,
+           new_height,
+           method=resize_mode,
+           resize_image_cache=resized_image,
+           )
 
     if container_image_cache is None:
         container = CudaImage(container_width, container_height)
     else:
-        if (container_image_cache.width != container_width
-                or container_image_cache.height != container_height):
-            raise ValueError(
-                f"Container cache dimensions must match: {container_width}x{container_height}, got {container_image_cache.width}x{container_image_cache.height}"
-            )
+        if (container_image_cache.width != container_width or container_image_cache.height != container_height):
+            raise ValueError(f"Container cache dimensions must match: {container_width}x{container_height}, got {container_image_cache.width}x{container_image_cache.height}")
         container = container_image_cache
 
     fill_color(container, background_color)
@@ -264,9 +257,7 @@ def create_image_grid(image: CudaImage,
 
     total_cells = grid_width * grid_height
     if num_images > total_cells:
-        raise ValueError(
-            f"Number of images ({num_images}) exceeds grid capacity ({total_cells})"
-        )
+        raise ValueError(f"Number of images ({num_images}) exceeds grid capacity ({total_cells})")
     
     width = (image.width * grid_width) + (spacing * (grid_width - 1))
     height = (image.height * grid_height) + (spacing * (grid_height - 1))
@@ -275,9 +266,7 @@ def create_image_grid(image: CudaImage,
         result = CudaImage(width, height)
     else:
         if grid_image_cache.width != width or grid_image_cache.height != height:
-            raise ValueError(
-                f"Grid cache dimensions must match: {width}x{height}, got {grid_image_cache.width}x{grid_image_cache.height}"
-            )
+            raise ValueError(f"Grid cache dimensions must match: {width}x{height}, got {grid_image_cache.width}x{grid_image_cache.height}")
         result = grid_image_cache
     
     fill_color(result, background_color)
