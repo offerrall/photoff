@@ -36,7 +36,7 @@ My motivation for creating PhotoFF stemmed from a need for a solution beyond the
 
 - NVIDIA GPU with CUDA support
 - CUDA Toolkit 11.0+
-- Python packages: `cffi`, `pillow`, `numpy`
+- Python packages: `cffi`, `pillow`,
 
 ### Installation
 
