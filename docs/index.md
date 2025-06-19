@@ -23,8 +23,6 @@ save_image(src_image, "./assets/gaussian_blur_test.png")
 src_image.free()
 ```
 
-![Gaussian Blur Test](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/gaussian_blur_test.png)
-
 ## Key Features
 
 - **Pythonic Interface**: Clean, intuitive API designed for both beginners and advanced users
