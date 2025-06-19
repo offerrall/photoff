@@ -91,14 +91,6 @@ Explore the full documentation at [https://offerrall.github.io/photoff/](https:/
 - [⚙️ Advanced Techniques](https://offerrall.github.io/photoff/advanced/)
 - [🔬 API Reference](https://offerrall.github.io/photoff/api/)
 
----
-
-## ⚠️ About Alpha Blending and Color Spaces
-
-PhotoFF employs a straightforward weighted alpha blend model. It's important to note that it does **not** perform gamma correction or operate in a linear color space. Therefore, it may not be suitable for cinematic or HDR production. However, for UI elements, overlays, thumbnails, and dynamic visual effects, its capabilities are more than sufficient.
-
----
-
 ## 🤝 Contributing
 
 Contributions are welcome! While this is a personal project, I intend to continue its development and improvement. If you're interested in contributing, please feel free to jump in.
