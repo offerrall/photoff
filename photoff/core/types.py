@@ -1,5 +1,4 @@
 from dataclasses import dataclass as _dataclass
-from typing import Any as CudaBuffer
 from .buffer import create_buffer, free_buffer
 
 

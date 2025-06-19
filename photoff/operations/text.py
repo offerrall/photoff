@@ -2,7 +2,6 @@ from PIL import Image, ImageDraw, ImageFont
 from ..core.types import CudaImage, RGBA
 from ..core.cuda_interface import ffi 
 from ..core.buffer import copy_to_device
-import numpy as np
 
 def render_text(text: str,
                 font_path: str,
@@ -35,30 +34,25 @@ def render_text(text: str,
     try:
         font = ImageFont.truetype(font_path, font_size)
     except Exception as e:
-        raise ValueError(f"Error al cargar la fuente '{font_path}': {e}")
-    
-    temp_img = Image.new("RGBA", (1, 1))
-    temp_draw = ImageDraw.Draw(temp_img)
-    
+        raise ValueError(f"Error loading font '{font_path}': {e}")
+
+    tmp_img = Image.new("RGBA", (1, 1))
+    tmp_draw = ImageDraw.Draw(tmp_img)
     try:
-        bbox = font.getbbox(text)
+        left, top, right, bottom = font.getbbox(text)
     except AttributeError:
-        bbox = temp_draw.textbbox((0, 0), text, font=font)
-    
-    left, top, right, bottom = bbox
-    text_width = right - left
-    text_height = bottom - top
-    
-    pil_image = Image.new("RGBA", (text_width, text_height), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(pil_image)
-    
-    color_tuple = (color.r, color.g, color.b, color.a)
-    draw.text((-left, -top), text, fill=color_tuple, font=font)
-    
-    cuda_image = CudaImage(text_width, text_height)
-    
-    img_array = np.asarray(pil_image, dtype=np.uint8)
-    c_buffer = ffi.cast("uchar4*", img_array.ctypes.data)
-    copy_to_device(cuda_image.buffer, c_buffer, text_width, text_height)
-    
-    return cuda_image
+        left, top, right, bottom = tmp_draw.textbbox((0, 0), text, font=font)
+
+    width, height = right - left, bottom - top
+
+    pil_img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(pil_img)
+    draw.text((-left, -top), text, fill=(color.r, color.g, color.b, color.a), font=font)
+
+    cuda_img = CudaImage(width, height)
+
+    host_buf = bytearray(pil_img.tobytes())
+    src_ptr = ffi.cast("uchar4*", ffi.from_buffer(host_buf))
+    copy_to_device(cuda_img.buffer, src_ptr, width, height)
+
+    return cuda_img

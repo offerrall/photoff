@@ -10,7 +10,6 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 - **CUDA Toolkit 11.0 or newer** – Required for compiling the CUDA components
 - **CFFI** – Used for interfacing between Python and the CUDA library
 - **Pillow** – Used for image loading, saving, and text rendering
-- **NumPy** – Used for memory management when transferring image data to/from CUDA
 
 ---
 
@@ -19,7 +18,7 @@ Before installing PhotoFF, ensure you have the following prerequisites:
 Install the required Python packages:
 
 ```bash
-pip install cffi pillow numpy
+pip install cffi pillow
 ```
 
 ---
@@ -52,24 +51,20 @@ pip install cffi pillow numpy
 
 3. You’ll get `photoff.so`.
 
-4. Make it available system-wide:
+4. Make it available to your system:
 
-   **Option A: Temporary**
-   ```bash
-   export LD_LIBRARY_PATH=/your/path/photoff:$LD_LIBRARY_PATH
-   ```
-
-   **Option B: Permanent**
    Add to `~/.bashrc` or `~/.zshrc`:
    ```bash
    export LD_LIBRARY_PATH=/your/path/photoff:$LD_LIBRARY_PATH
+   ```
+   Replace `/your/path/photoff` with the actual path where `photoff.so` is located.
+   Then run:
+   ```bash
    source ~/.bashrc
    ```
-
-   **Option C: System-wide**
+   or
    ```bash
-   echo "/your/path/photoff" | sudo tee /etc/ld.so.conf.d/photoff.conf
-   sudo ldconfig
+   source ~/.zshrc
    ```
 
 ---

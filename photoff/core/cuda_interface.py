@@ -1,4 +1,3 @@
-import os
 import sys
 from cffi import FFI
 
