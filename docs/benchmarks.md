@@ -63,13 +63,6 @@ where the total time includes all Python overhead, memory transfers and device s
 | BILINEAR | 2 327.16           | **21 242.36**   | 42.45      | 54.82×              | **500.36×**      |
 | BICUBIC  | 2 162.25           | **8 842.59**    | 30.55      | 70.77×              | **289.42×**      |
 
-## Discussion
-
-- **GPU cache wins** – Re‑using pre‑allocated output buffers removes all CUDA allocation overhead and multiplies throughput by up to **10×** compared with the naïve GPU path.
-- **Bilinear resize** shows the largest absolute gain (over **500×** faster than Pillow) because the CPU version is extremely compute‑bound, whereas the GPU variant distributes the interpolation across thousands of threads.
-- `` exhibits only a modest 1.85× speed‑up because the operation is fully memory‑bandwidth‑bound and already trivial on the CPU.
-- Even *without caching*, PhotoFF is between **3× and 71×** faster than Pillow across this test‑set.
-
 ## Reproducing the Benchmarks
 
 ```bash
