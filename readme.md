@@ -34,10 +34,8 @@ My motivation for creating PhotoFF stemmed from a need for a solution beyond the
 
 ### Prerequisites
 
-- Python 3.9+
 - NVIDIA GPU with CUDA support
 - CUDA Toolkit 11.0+
-- Visual Studio with C++ support (Windows)
 - Python packages: `cffi`, `pillow`, `numpy`
 
 ### Installation
