@@ -1,4 +1,3 @@
-# Site information
 site_name: PhotoFF
 site_description: A library for processing images in Python with CUDA support.
 site_author: Beltrán Offerrall
@@ -6,7 +5,6 @@ repo_name: PhotoFF
 repo_url: https://github.com/offerrall/photoff
 
 
-# Theme configuration
 theme:
   name: material
   features:
@@ -21,7 +19,7 @@ theme:
     - hide:
         - toc.title
   palette:
-    # Dark mode (default)
+
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
@@ -29,7 +27,7 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Light mode
-    # Light mode alternative
+
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
@@ -38,7 +36,6 @@ theme:
         icon: material/brightness-7
         name: Dark mode
 
-# Markdown extensions
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
@@ -51,7 +48,6 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.superfences
 
-# Navigation structure
 nav:
   - Start: index.md
   - Learn: 
@@ -60,13 +56,10 @@ nav:
     - Installation: installation.md
   - API: api.md
 
-# Plugins (optional but useful)
 plugins:
-  - search
   - minify:
       minify_html: true
 plugins:
-  - search
   - minify:
       minify_html: true
   - mkdocstrings:
@@ -75,7 +68,6 @@ plugins:
           options:
             docstring_style: google
 
-# Footer links and information (optional)
 extra:
   social:
     - icon: fontawesome/brands/github
