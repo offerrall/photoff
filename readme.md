@@ -1,7 +1,5 @@
 # PhotoFF
 
-![PhotoFF Logo](https://raw.githubusercontent.com/offerrall/photoff/refs/heads/main/assets/logo_lib.png)
-
 **PhotoFF** is a high-performance GPU image processing library written in Python and accelerated with CUDA.
 Originally developed as part of a custom OBS-style rendering engine, it has evolved into a personal tool that I intend to use and maintain for the foreseeable future.
 
