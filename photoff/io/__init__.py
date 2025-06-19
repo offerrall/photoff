@@ -2,7 +2,6 @@ from ..core import ffi
 from ..core.buffer import copy_to_host, copy_to_device
 from ..core.types import CudaImage
 from PIL import Image
-import numpy as np
 
 
 def image_to_pil(image: CudaImage) -> Image:
@@ -54,7 +53,7 @@ def save_image(image: CudaImage, filename: str) -> None:
     img.close()
 
 
-def load_image(filename: str, container: CudaImage = None) -> CudaImage:
+def load_image(filename: str, container: CudaImage | None = None) -> CudaImage:
     """
     Loads an image from disk and transfers it to a CudaImage.
 
@@ -80,16 +79,14 @@ def load_image(filename: str, container: CudaImage = None) -> CudaImage:
 
     if container is None:
         container = CudaImage(width, height)
-
     if width > container.width or height > container.height:
         raise ValueError("Image dimensions exceed container dimensions")
 
-    img_array = np.asarray(img, dtype=np.uint8)
+    host_buf = bytearray(img.tobytes())
 
-    c_buffer = ffi.cast("uchar4*", img_array.ctypes.data)
-    copy_to_device(container.buffer, c_buffer, width, height)
+    src_ptr = ffi.cast("uchar4*", ffi.from_buffer(host_buf))
+    copy_to_device(container.buffer, src_ptr, width, height)
 
     container.width = width
     container.height = height
-
     return container
