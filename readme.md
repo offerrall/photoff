@@ -14,7 +14,7 @@ I'm sharing this project because it might be beneficial to others, and I highly 
 - **Simple and Direct Python API:** Enjoy a user-friendly API similar to PIL, but supercharged for GPU processing.
 - **Exceptional Performance:** Achieve speeds of up to **30,000 FPS** on rtx 3070 with 1080p images.
 - **Comprehensive Documentation:** Benefit from clear explanations and practical examples.
-- **Minimal Dependencies:** Requires only `pillow`, `cffi`, and `numpy` (solely for data transfer).
+- **Minimal Dependencies:** Requires only `pillow`, `cffi`.
 
 ---
 
