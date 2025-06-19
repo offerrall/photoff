@@ -55,6 +55,8 @@ nav:
     - Advanced: advanced.md
     - Installation: installation.md
   - API: api.md
+  - Performance:
+    - Benchmarks: benchmarks.md
 
 plugins:
   - minify:

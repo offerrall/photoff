@@ -38,3 +38,4 @@ Now that you understand the basics, you can:
 - Explore the [Basic Operations](basics.md) to learn about loading, saving, and manipulating images
 - Dive into the [Advanced Operations](advanced.md) to discover more complex image processing techniques
 - Check out the [API Reference](api.md) for detailed documentation on all available functions and classes
+- Read the [Benchmarks](benchmarks.md) to see how PhotoFF compares to other libraries in terms of performance

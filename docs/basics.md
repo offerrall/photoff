@@ -168,3 +168,4 @@ Now that you understand the basics, you can:
 
 * Explore the [Advanced Topics](advanced.md) for more memory management and performance tips
 * Check the [API Reference](api.md) for detailed information on all functions
+* Read the [Benchmarks](benchmarks.md) to see how PhotoFF performs compared to other libraries
