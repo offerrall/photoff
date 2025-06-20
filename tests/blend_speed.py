@@ -17,9 +17,9 @@ def blend_speed_test():
 
     # --- PhotoFF (GPU) ---
     start = time()
-    for _ in range(100):
+    for _ in range(1000):
         blend(bg, over, pos_x, pos_y)
-    fps_photoff = 100 / (time() - start)
+    fps_photoff = 1000 / (time() - start)
 
     # Crear imágenes PIL
     bg_pil = Image.new("RGBA", (width, height), (0, 0, 0, 255))
@@ -27,10 +27,10 @@ def blend_speed_test():
 
     # --- PILLOW (CPU) ---
     start = time()
-    for _ in range(100):
+    for _ in range(1000):
         composite = bg_pil.copy()
         composite.paste(over_pil, (pos_x, pos_y), over_pil)  # respetando alfa
-    fps_pillow = 100 / (time() - start)
+    fps_pillow = 1000 / (time() - start)
 
 
     print("\Blend Performance Comparison (FPS & Speedup vs Pillow)")

@@ -408,63 +408,48 @@ __global__ void fillColorKernel(uchar4* buffer,
     }
 }
 
-
-__global__ void blendKernel(uchar4* dst,
-                            const uchar4* src,
+__global__ void blendKernel(uchar4* __restrict__ dst,
+                            const uchar4* __restrict__ src,
                             uint32_t dst_width,
                             uint32_t dst_height,
                             uint32_t src_width,
                             uint32_t src_height,
                             int32_t pos_x,
-                            int32_t pos_y) {
-
-    int x = blockIdx.x * blockDim.x + threadIdx.x;
-    int y = blockIdx.y * blockDim.y + threadIdx.y;
-
+                            int32_t pos_y)
+{
+    const int x = blockIdx.x * blockDim.x + threadIdx.x;
+    const int y = blockIdx.y * blockDim.y + threadIdx.y;
     if (x >= dst_width || y >= dst_height) return;
 
-    int src_x = x - pos_x;
-    int src_y = y - pos_y;
+    const int sx = x - pos_x;
+    const int sy = y - pos_y;
+    if (sx < 0 || sy < 0 || sx >= (int)src_width || sy >= (int)src_height) return;
 
-    if (src_x >= 0 && src_x < src_width && 
-        src_y >= 0 && src_y < src_height) {
-        
-        int dst_idx = y * dst_width + x;
-        int src_idx = src_y * src_width + src_x;
-        
-        uchar4 src_pixel = src[src_idx];
-        uchar4 dst_pixel = dst[dst_idx];
-        
-        float srcA = src_pixel.w / 255.0f;
-        float dstA = dst_pixel.w / 255.0f;
+    const int dst_idx = y  * dst_width + x;
+    const int src_idx = sy * src_width  + sx;
 
-        // Case 1: pixel totally opaque
-        if (src_pixel.w == 255) {
-            dst[dst_idx] = src_pixel;
-        } 
-        // Case 2: pixel totally transparent
-        else if (src_pixel.w == 0) {
-            // Do nothing
-        } 
-        // Case 3: pixel semi-transparent
-        else {
-            float outA = srcA + dstA * (1.0f - srcA);
+    const uchar4 s = src[src_idx];
+    uchar4 d = dst[dst_idx];
 
-            // Avoid division by zero
-            if (outA > 0.0f) {
-                float outR = (src_pixel.x * srcA + dst_pixel.x * dstA * (1.0f - srcA)) / outA;
-                float outG = (src_pixel.y * srcA + dst_pixel.y * dstA * (1.0f - srcA)) / outA;
-                float outB = (src_pixel.z * srcA + dst_pixel.z * dstA * (1.0f - srcA)) / outA;
+    if (s.w == 0)                             return;
+    if (s.w == 255) { dst[dst_idx] = s;       return; }
 
-                dst[dst_idx].x = static_cast<unsigned char>(outR);
-                dst[dst_idx].y = static_cast<unsigned char>(outG);
-                dst[dst_idx].z = static_cast<unsigned char>(outB);
-                dst[dst_idx].w = static_cast<unsigned char>(outA * 255.0f);
-            } else {
-                // Do nothing
-            }
-        }
-    }
+    const uint16_t sa   = s.w;
+    const uint16_t da   = d.w;
+    const uint16_t invA = 255 - sa;
+
+    const uint16_t outA = sa + ((da * invA + 127) >> 8);
+
+    const uint32_t tmpR = s.x * sa + ((uint32_t)d.x * da * invA + 127) >> 8;
+    const uint32_t tmpG = s.y * sa + ((uint32_t)d.y * da * invA + 127) >> 8;
+    const uint32_t tmpB = s.z * sa + ((uint32_t)d.z * da * invA + 127) >> 8;
+
+    d.x = static_cast<unsigned char>((tmpR + (outA >> 1)) / outA);
+    d.y = static_cast<unsigned char>((tmpG + (outA >> 1)) / outA);
+    d.z = static_cast<unsigned char>((tmpB + (outA >> 1)) / outA);
+    d.w = static_cast<unsigned char>(outA);
+
+    dst[dst_idx] = d;
 }
 
 __global__ void cornerRadiusKernel(uchar4* buffer,
