@@ -26,7 +26,7 @@ def image_to_pil(image: CudaImage) -> Image:
     data_ptr = ffi.from_buffer(img_data)
     copy_to_host(ffi.cast("uchar4*", data_ptr), image.buffer, image.width,
                  image.height)
-    return Image.frombytes("RGBA", (image.width, image.height),
+    return Image.frombuffer("RGBA", (image.width, image.height),
                            bytes(img_data))
 
 
